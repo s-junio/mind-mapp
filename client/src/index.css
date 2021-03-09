@@ -1,12 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Oxygen:wght@700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Oxygen:wght@700&display=swap");
 body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    scroll-behavior: smooth;
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-    font-family: 'Oxygen', sans-serif;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+  font-family: "Oxygen", sans-serif;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--neutral1);
+  /*  border-radius: 10px; */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  /* border-radius: 10px; */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary);
 }
 
 h1,
@@ -14,31 +39,60 @@ h2,
 h3,
 h4,
 h5 {
-    margin: 0;
+  margin: 0;
 }
 
 .light-mode {
-    --primary: #18a0fb;
-    --secondary: #4ce0d2;
-    --neutral1: #c4c4c4;
-    --neutral2: #ffffff;
-    --accent1: #e63946;
-    --accent2: #f5724f;
+  --primary: #18a0fb;
+  --secondary: #4ce0d2;
+  --neutral1: #c4c4c4;
+  --neutral2: #ffffff;
+  --accent1: #e63946;
+  --accent2: #f5724f;
 }
 
 .dark-mode {
-    --primary: #a348ab;
-    --secondary: #934bda;
-    --neutral1: #66657d;
-    --neutral2: #222831;
-    /* or maybe #282c34 */
-    --accent1: #e88873;
-    --accent2: #32a652;
+  --primary: #a348ab;
+  --secondary: #934bda;
+  --neutral1: #66657d;
+  --neutral2: #222831;
+  /* or maybe #282c34 */
+  --accent1: #e88873;
+  --accent2: #32a652;
 }
 
 .main-window {
-    background-color: var(--neutral2);
-    color: var(--neutral1);
-    width: 100vw;
-    height: 100vh;
+  transition: background-color 0.5s ease-in, color 0.7s ease-in;
+  background-color: var(--neutral2);
+  color: var(--neutral1);
+  width: 100vw;
+  height: 100vh;
+}
+
+.main-window .content > div > div {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+.switch-module-enter {
+  opacity: 0;
+  z-index: 1;
+}
+.switch-module-exit {
+  opacity: 1;
+  z-index: 0;
+  transition: all .25s ease-in;
+}
+.switch-module-exit.switch-module-exit-active {
+  opacity: 0;
+  transition: all .25s ease-in;
+}
+
+.switch-module-enter.switch-module-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all .25s ease-in;
 }

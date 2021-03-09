@@ -1,18 +1,17 @@
-import React from 'react';
-import logo from '../../logo.svg';
-import './Home.css';
+import React from "react";
+import "./Home.css";
 
-function App() {
+function Home() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          <code>Mind Mapp</code>
-        </p>
+    <div className="home-wrapper">
+      <header className="Home-header">
+        <div className="greeting">
+          <h1>A new way to write down your thoughts.</h1>
+        </div>
       </header>
+      <div className="footer"></div>
     </div>
   );
 }
 
-export default App;
+export default Home;

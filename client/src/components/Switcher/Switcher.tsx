@@ -5,7 +5,7 @@ function Switcher(props: any) {
   return (
     <label className="switch">
       <input type="checkbox" onClick={props.switchHandler}></input>
-      <span className="slider"></span>
+      <span className="slider round"></span>
     </label>
   );
 }
