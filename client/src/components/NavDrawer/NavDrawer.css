@@ -1,0 +1,110 @@
+.navdrawer {
+    width: 300px;
+    height: 100vh;
+    background-color: var(--primary);
+    color: var(--neutral2);
+    transform: translateX(-300px);
+    position: fixed;
+    top: 0px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    transition: transform 0.3s ease-in, background-color 0.5s ease-in, color 0.7s ease-in;
+    z-index: 50;
+}
+
+.navdrawer.open {
+    transform: translateX(0);
+}
+
+.navdrawer .action-button {
+    position: absolute;
+    right: -40px;
+    top: 2px;
+    color: var(--neutral1);
+    font-size: 2rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.navdrawer.open .action-button {
+    right: 0px;
+    color: var(--neutral2);
+}
+
+.navdrawer .action-button svg {
+    pointer-events: none;
+}
+
+.navdrawer .action-button:focus {
+    filter: brightness(60%);
+    outline: none;
+}
+
+.navdrawer .user {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.navdrawer .user .avatar {
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    font-size: 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--neutral2);
+    color: var(--neutral1);
+    padding: 1rem;
+}
+
+.navdrawer .links {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+.links a,
+.links a:visited,
+.links a:active {
+    text-decoration: none;
+    color: currentColor;
+    animation: slide-left 0.4s ease-in forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.links a:hover {
+    filter: brightness(80%);
+}
+
+.blanket {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    z-index: 3;
+    animation: appear 0.5s forwards;
+}
+
+@keyframes slide-left {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes appear {
+    to {
+        backdrop-filter: blur(3px);
+    }
+}
