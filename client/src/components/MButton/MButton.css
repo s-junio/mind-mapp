@@ -1,0 +1,15 @@
+.mbutton {
+  font-size: 4rem;
+  padding: 2rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  color: var(--neutral2);
+  background-image: linear-gradient(120deg, var(--primary), var(--accent1));
+}
+
+.mbutton:hover{
+
+    font-size: 8rem;
+
+}
