@@ -84,7 +84,7 @@ h5 {
 .switch-module-exit {
   opacity: 1;
   z-index: 0;
-  transition: all .25s ease-in;
+  transition: all .25s ease-in; /* not needed */
 }
 .switch-module-exit.switch-module-exit-active {
   opacity: 0;

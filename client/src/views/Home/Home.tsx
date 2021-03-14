@@ -15,7 +15,8 @@ function Home() {
         <div className="greeting">
           <h1>A new way to write down your thoughts.</h1>
         </div>
-        <MButton handleClick={goToCreate} label="START"></MButton>
+
+        <MButton handleClick={goToCreate} label="Start"></MButton>
       </header>
       <div className="footer"></div>
     </div>

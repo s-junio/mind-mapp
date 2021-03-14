@@ -55,7 +55,7 @@ function NavDrawer(props: any) {
           </>
         )}
       </div>
-      {isOpen && <div className="blanket"></div>}
+      {isOpen && <div className="blanket" onClick={handleActionClick}></div>}
     </>
   );
 }
