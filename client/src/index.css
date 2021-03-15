@@ -24,6 +24,7 @@ h5 {
     --neutral2: #ffffff;
     --accent1: #e63946;
     --accent2: #f5724f;
+    --bg-diagram: #c4c4c42a;
 }
 
 .dark-mode {
@@ -34,6 +35,7 @@ h5 {
     /* or maybe #282c34 */
     --accent1: #e88873;
     --accent2: #32a652;
+    --bg-diagram: #66657d49;
 }
 
 .main-window {

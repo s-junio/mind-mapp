@@ -1,0 +1,55 @@
+.react-flow__controls {
+  bottom: auto !important;
+  top: 10px;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.react-flow__controls-button.react-flow__controls-zoomout,
+.react-flow__controls-button.react-flow__controls-zoomin,
+.react-flow__controls-button.react-flow__controls-fitview {
+  width: 36px;
+  height: 36px;
+  margin: 0.7rem 0;
+  box-shadow: 0 0 2px 1px rgb(0 0 0 / 8%); /* change here */
+  border-radius: 50%;
+  fill: white !important;
+  background-color: var(--primary);
+  border: none;
+}
+
+.react-flow__controls-button.react-flow__controls-zoomout:hover,
+.react-flow__controls-button.react-flow__controls-zoomin:hover,
+.react-flow__controls-button.react-flow__controls-fitview:hover {
+  background-color: var(--secondary);
+  box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.1);
+}
+
+.react-flow__controls-button svg {
+  max-width: 20px !important;
+  max-height: 20px !important;
+}
+
+.react-flow__minimap {
+  background-color: var(--neutral2) !important;
+}
+
+
+.custom-node .header {
+  background: var(--primary);
+  color: var(--neutral2);
+  border-radius: 1rem 1rem 0 0;
+  padding: 7px;
+  width: 70%;
+  border-bottom: none;
+}
+.custom-node .content {
+  background: var(--primary);
+  color: var(--neutral2);
+  padding: 10px;
+}
+
+.selected .custom-node{
+  /* box-shadow: 1px 1px 6px #000; */
+}
+

@@ -1,0 +1,17 @@
+.doc {
+    width: 600px;
+    padding: 1rem;
+}
+
+.doc .section {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+/* remove later */
+.doc span {
+    font-size: 1rem;
+    opacity: .6;
+  }
+  

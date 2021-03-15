@@ -1,5 +1,23 @@
 .mapp {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  --header-height: 60px;
+}
+
+.mapp-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--header-height);
+  width: 100%;
+}
+
+.mapp-content {
+  display: flex;
+  height: calc(100vh - var(--header-height));
+  background-color: var(--bg-diagram);
+}
+
+.mapp-content .seperator {
+  width: 10px;
+  cursor: ew-resize;
+  background-color: var(--neutral2);
 }
