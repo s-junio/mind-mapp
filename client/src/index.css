@@ -50,6 +50,7 @@ h5 {
     --accent1: #e63946;
     --accent2: #f5724f;
     --bg-diagram: #c4c4c42a;
+    --alert: #e63946;
 }
 
 .dark-mode {
@@ -61,6 +62,7 @@ h5 {
     --accent1: #e88873;
     --accent2: #32a652;
     --bg-diagram: #66657d49;
+    --alert: #c73c47;
 }
 
 .main-window {

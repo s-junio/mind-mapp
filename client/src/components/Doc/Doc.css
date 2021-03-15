@@ -1,6 +1,7 @@
 .doc {
     width: 600px;
     padding: 1rem;
+    overflow-y: auto;
 }
 
 .doc .section {

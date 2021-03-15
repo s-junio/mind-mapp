@@ -1,6 +1,8 @@
 import React from "react";
-import {CSSTransition} from 'react-transition-group';
 import "./Dialog.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+
 type DialogProps = {
   show: boolean;
   onAction: (ev: React.MouseEvent) => void;
@@ -15,12 +17,16 @@ const Dialog: React.FC<DialogProps> = (props) => {
   }
   return (
     <div className="dialog-wrapper">
-      <CSSTransition timeout={200} classNames="my-node">
-        <div className="dialog">
-          {props.children}
-          <button onClick={onAction}>Yes</button>
+      <div className="dialog">
+        {props.children}
+        <div className="buttons">
+          <button onClick={onAction}>
+            Yes
+            <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+          </button>
+          <button /* onClick={onAction} */ className="cancel">No</button>
         </div>
-      </CSSTransition>
+      </div>
     </div>
   );
 };
