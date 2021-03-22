@@ -1,18 +1,41 @@
 .doc {
-    width: 600px;
-    padding: 1rem;
-    overflow-y: auto;
+  width: 800px;
+  padding: 1rem;
+  overflow-y: auto;
 }
 
 .doc .section {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
 }
 
 /* remove later */
 .doc span {
-    font-size: 1rem;
-    opacity: .6;
+  font-size: 1rem;
+  opacity: 0.6;
+}
+
+.doc .item {
+  border: 5px solid transparent;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.doc .item.scrolled-to {
+  animation: attention .7s ease-in;
+}
+
+@keyframes attention {
+  0% {
+    filter: brightness(100%);
+    border-color: transparent;
   }
-  
+  50% {
+    filter: brightness(150%);
+    border-color: var(--neutral1);
+  }
+  100% {
+    border-color: transparent;
+  }
+}

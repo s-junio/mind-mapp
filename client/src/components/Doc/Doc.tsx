@@ -1,16 +1,17 @@
 import React, { useRef } from "react";
 import "./Doc.css";
 import { useStoreState } from "react-flow-renderer";
+import type { Node } from "react-flow-renderer";
 
 type DocProps = {
   style?: React.CSSProperties;
 };
 
 const Item = (props: any) => (
-  <div id={props.id}>
+  <div id={props.id} className="item">
     <div className="section">
-      <h1>{props.title}</h1>
-      <span>{props.text}</span>
+      <h1>{props.headerTitle}</h1>
+      <span>{props.headerType}</span>
     </div>
     <p style={{ textAlign: "justify" }}>
       Excepteur veniam sunt qui exercitation enim occaecat aliquip est cillum ad
@@ -43,32 +44,58 @@ const Item = (props: any) => (
 );
 
 const Doc: React.FC<DocProps> = (props) => {
+  const compareNodes = (prev: Array<Node>, next: Array<Node>): boolean => {
+    if (prev.length !== next.length) return false;
+    let areEqual = true;
+    for (let i = 0; i < prev.length; i++) {
+      if (prev[i].data !== next[i].data) {
+        areEqual = false;
+        break;
+      }
+    }
+    return areEqual;
+  };
+
+  const nodes = useStoreState((store: any) => store.nodes, compareNodes);
+
   const elem = useRef(null);
   const selectedElements = useStoreState(
     (store: any) => store.selectedElements
   );
-
+  console.log(selectedElements);
   if (selectedElements && selectedElements[0]) {
     if (elem && elem.current) {
       const { children }: any = elem.current;
       const child = children.namedItem(selectedElements[0].id);
       child.scrollIntoView({ block: "start", behavior: "smooth" });
+      child.classList.remove("scrolled-to");
+      let scrollTimeout: any;
+      const current: any = elem.current;
+      const handleScroll = (e: any) => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(function () {
+          child.classList.add("scrolled-to");
+          current.removeEventListener("scroll", handleScroll);
+        }, 20);
+      };
+      current.addEventListener("scroll", handleScroll);
     }
   }
-  const nodes = useStoreState((store: any) => store.nodes);
-  console.log(nodes);
 
   return (
     <div className="doc" style={props.style} ref={elem}>
-      {nodes &&
+      {nodes && nodes[0] ? (
         nodes.map((node: any) => (
           <Item
             id={node.id}
             key={node.id}
-            title={node.data.title}
-            text={node.data.text}
+            headerTitle={node.data.headerTitle}
+            headerType={node.data.headerType}
           ></Item>
-        ))}
+        ))
+      ) : (
+        <h3>*First add a node to the diagram to start*</h3>
+      )}
     </div>
   );
 };

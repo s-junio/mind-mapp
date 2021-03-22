@@ -10,7 +10,7 @@ type Button={
 function MButton(props:Button) {
         
   return (
-    <button onClick={props.handleClick} className="mbutton">{props.label}</button>
+    <button onClick={props.handleClick} className="mbutton"><span>{props.label}</span></button>
   );
 }
 export default MButton;

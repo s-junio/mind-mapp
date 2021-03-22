@@ -5,9 +5,13 @@ import Dialog from "../../components/Dialog/Dialog";
 
 import "./Mapp.css";
 import { ReactFlowProvider } from "react-flow-renderer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons";
 
 function Mapp() {
   const [showDialog, setShowDialog] = useState(false);
+  const [isDocOpen, setIsDocOpen] = useState(false);
+
   const onDialogAction = () => {
     setShowDialog(!showDialog);
   };
@@ -20,8 +24,12 @@ function Mapp() {
       <div className="mapp-content">
         <ReactFlowProvider>
           <MappFlow></MappFlow>
-          {/* <div className="seperator"></div> */}
-          <Doc></Doc>
+          <div className="separator" onClick={() => setIsDocOpen(!isDocOpen)} title={`${isDocOpen ? 'Hide' : 'Reveal'} Text View`}>
+            <div className="icon">
+              <FontAwesomeIcon icon={faAngleDoubleLeft} style={{transform: `rotate(${isDocOpen ? '180deg':'0deg'})`}}></FontAwesomeIcon>
+            </div>
+          </div>
+          {isDocOpen && <Doc></Doc>}
         </ReactFlowProvider>
       </div>
       <Dialog show={showDialog} onAction={onDialogAction}>

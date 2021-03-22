@@ -11,7 +11,7 @@ import ReactFlow, {
   useStoreState,
   removeElements,
 } from "react-flow-renderer";
-import type { NodeProps } from "react-flow-renderer";
+import type { Node, NodeProps } from "react-flow-renderer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTrash,
@@ -37,14 +37,18 @@ const RainbowButtons = () => (
   </div>
 );
 const CustomNodeComponent = ({ data, selected }: NodeProps) => {
+  const [, , zoom] = useStoreState((state: any) => state.transform);
+  const showContent = zoom >= 0.6;
   return (
     <div
-      className="custom-node react-flow__node-default"
-      data-title={data.title}
+      className={`custom-node react-flow__node-default ${
+        showContent || "zoomed-out"
+      }`}
+      data-title={data.headerType}
       style={{ backgroundColor: data.color }}
     >
       {selected && <RainbowButtons></RainbowButtons>}
-      <div>{data.text}</div>
+      <div>{showContent ? data.headerTitle : data.headerType}</div>
       <Handle
         type="target"
         id="a"
@@ -68,39 +72,47 @@ function MappFlow() {
       id: "1",
       type: "special",
       position: { x: 10, y: 10 },
-      data: { text: "Introduction", title: "Chapter 1" },
+      data: { headerTitle: "Introduction", headerType: "Chapter 1" },
     },
     {
       id: "2",
       type: "special",
       position: { x: 300, y: 10 },
-      data: { text: "Objectivess", title: "Chapter 2" },
+      data: { headerTitle: "Objectivess", headerType: "Chapter 2" },
     },
     {
       id: "3",
       type: "special",
       position: { x: 600, y: 10 },
-      data: { text: "State.............", title: "Chapter 3" },
+      data: { headerTitle: "State.............", headerType: "Chapter 3" },
     },
     {
       id: "11",
       type: "special",
       position: { x: 10, y: 200 },
-      data: { text: "Why..........", title: "Sub 1", color: "#FC5130" },
+      data: {
+        headerTitle: "Why..........",
+        headerType: "Sub 1",
+        color: "#FC5130",
+      },
     },
     {
       id: "12",
       type: "special",
       position: { x: 300, y: 200 },
-      data: { text: "Goals.........", title: "Sub 2", color: "#FC5130" },
+      data: {
+        headerTitle: "Goals.........",
+        headerType: "Sub 2",
+        color: "#FC5130",
+      },
     },
     {
       id: "13",
       type: "special",
       position: { x: 600, y: 200 },
       data: {
-        text: "Principles.............",
-        title: "Sub 3",
+        headerTitle: "Principles.............",
+        headerType: "Sub 3",
         color: "#FC5130",
       },
     },
@@ -143,8 +155,8 @@ function MappFlow() {
     reactFlowInstance.fitView();
   };
 
-  const onElementsRemove = (elementsToRemove:any) => {
-    const removeFunc:any = (els:any) => removeElements(elementsToRemove, els);
+  const onElementsRemove = (elementsToRemove: any) => {
+    const removeFunc: any = (els: any) => removeElements(elementsToRemove, els);
     setElements(removeFunc);
   };
 
@@ -158,6 +170,7 @@ function MappFlow() {
         nodeTypes={{ special: CustomNodeComponent }}
         onLoad={onLoad}
         onElementsRemove={onElementsRemove}
+        onNodeContextMenu={console.log}
       >
         <Controls showInteractive={false} />
         <Background
@@ -175,11 +188,7 @@ function MappFlow() {
 
             return "#eee";
           }}
-          /*  nodeColor={(n) => {
-                if (n.style?.background) return n.style.background;
-  
-                return "#fff";
-              }} */
+          nodeColor={(n: Node<any>) => n.data.color || "#fff"}
           nodeBorderRadius={2}
         />
       </ReactFlow>

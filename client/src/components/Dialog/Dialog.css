@@ -13,8 +13,7 @@
 }
 
 .dialog {
-  width: 300px;
-  height: 200px;
+  width: 400px;
   background-color: rgba(0, 0, 0, 0.05);
   text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.432);
   box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.432);
@@ -22,7 +21,7 @@
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   font-size: 2rem;
   animation: bounceInDown 0.8s ease-in forwards;
@@ -39,7 +38,7 @@
   border: none;
   cursor: pointer;
   padding: 1rem;
-  margin: 1rem 0.5rem;
+  margin: 3rem 0 0rem 0.5rem;
   border-radius: 10px;
   transition: filter .2s linear;
 }

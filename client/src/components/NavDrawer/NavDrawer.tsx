@@ -21,7 +21,7 @@ function NavDrawer(props: any) {
     target.blur();
   };
 
-  const handleSwitcherChange = (ev: any) => {
+  const handleSwitcherChange = (ev: React.MouseEvent) => {
     props.handleSwitch(ev);
   };
 
@@ -43,6 +43,7 @@ function NavDrawer(props: any) {
               {props.routes &&
                 props.routes.map((route: Route) => (
                   <Link
+                    key={route.path}
                     onClick={handleActionClick}
                     style={{ animationDelay: ".08s" }}
                     to={route.path}
