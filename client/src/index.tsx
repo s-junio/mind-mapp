@@ -1,36 +1,53 @@
 import React from "react";
+
 import ReactDOM from "react-dom";
 import "./index.css";
 import NavDrawer from "./components/NavDrawer/NavDrawer";
-import Home from "./views/Home/Home";
-import Projects from "./views/Projects/Projects";
-import Mapp from "./views/Mapp/Mapp";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+import ThemeManager from './ThemeManager';
+
+import App from "./App";
+
+const routes = [
+  {
+    path: "/",
+    title: "Home",
+    module: "./views/Home/Home",
+  },
+  {
+    path: "/projects",
+    title: "Projects",
+    module: "./views/Projects/Projects",
+  },
+  {
+    path: "/mapp",
+    title: "New Mapp",
+    module: "./views/Mapp/Mapp",
+  },
+  {
+    path: "/profile",
+    title: "Profile",
+    module: "./views/Profile/Profile",
+  },
+];
+
+const TManager = ThemeManager.Instance;
+const startTheme = TManager.currentTheme;
 
 function handleSwitch(ev: any) {
-  const elem = document.getElementById("toggle");
-  if (elem) {
-    elem.classList.toggle("light-mode");
-    elem.classList.toggle("dark-mode");
-  }
+  TManager.toggleTheme();
+
 }
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <div id="toggle" className="light-mode main-window">
-        <NavDrawer handleSwitch={handleSwitch}></NavDrawer>
-        <Switch>
-          <Route path="/projects">
-            <Projects></Projects>
-          </Route>
-          <Route path="/mapp">
-            <Mapp />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
+      <div
+        id="toggle"
+        className={`${startTheme} main-window`}
+      >
+        <NavDrawer routes={routes} handleSwitch={handleSwitch}></NavDrawer>
+        <App></App>
       </div>
     </Router>
   </React.StrictMode>,

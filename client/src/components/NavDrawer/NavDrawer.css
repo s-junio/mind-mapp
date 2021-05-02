@@ -12,6 +12,7 @@
     flex-direction: column;
     transition: transform 0.3s ease-in, background-color 0.5s ease-in, color 0.7s ease-in;
     z-index: 50;
+    box-shadow: 2px 0px 6px rgba(0, 0, 0, 0.22);
 }
 
 .navdrawer.open {
@@ -20,17 +21,20 @@
 
 .navdrawer .action-button {
     position: absolute;
-    right: -40px;
-    top: 2px;
+    right: -50px;
+    top: 8px;
     color: var(--neutral1);
-    font-size: 2rem;
+    font-size: 2.5rem;
     background-color: transparent;
     border: none;
     cursor: pointer;
+    transform-origin: left;
+    transition: all .5s ease-in;
 }
 
 .navdrawer.open .action-button {
-    right: 0px;
+    right: -40px;
+    transform: rotateY(180deg);
     color: var(--neutral2);
 }
 
@@ -92,7 +96,7 @@
     left: 0px;
     width: 100vw;
     height: 100vh;
-    z-index: 3;
+    z-index: 12;
     animation: appear 0.5s forwards;
 }
 

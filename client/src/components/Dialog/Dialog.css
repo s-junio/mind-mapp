@@ -1,0 +1,92 @@
+.dialog-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 11;
+  color: #fff;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(3px);
+}
+
+.dialog {
+  width: 400px;
+  background-color: rgba(0, 0, 0, 0.05);
+  text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.432);
+  box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.432);
+  border-radius: 10px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 2rem;
+  animation: bounceInDown 0.8s ease-in forwards;
+}
+
+.dialog .buttons {
+  align-self: flex-end;
+}
+
+.dialog button {
+  background-color: var(--alert);
+  font-size: 2rem;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 1rem;
+  margin: 3rem 0 0rem 0.5rem;
+  border-radius: 10px;
+  transition: filter .2s linear;
+}
+
+.dialog button svg{
+    margin-left: 1rem;
+}
+.dialog .buttons .cancel {
+  background-color: var(--neutral1);
+}
+
+.dialog button:hover {
+  filter: brightness(110%);
+}
+@keyframes bounceInDown {
+  0%,
+  60%,
+  75%,
+  90%,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  0% {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -3000px, 0) scaleY(3);
+    transform: translate3d(0, -3000px, 0) scaleY(3);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 25px, 0) scaleY(0.9);
+    transform: translate3d(0, 25px, 0) scaleY(0.9);
+  }
+
+  75% {
+    -webkit-transform: translate3d(0, -10px, 0) scaleY(0.95);
+    transform: translate3d(0, -10px, 0) scaleY(0.95);
+  }
+
+  90% {
+    -webkit-transform: translate3d(0, 5px, 0) scaleY(0.985);
+    transform: translate3d(0, 5px, 0) scaleY(0.985);
+  }
+
+  to {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}

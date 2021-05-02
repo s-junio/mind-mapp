@@ -1,0 +1,144 @@
+.profile {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+}
+
+.profile .banner {
+  position: absolute;
+  width: 100vw;
+  height: 500px;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  clip-path: polygon(100% 0, 100% 38%, 57% 23%, 29% 30%, 5% 0);
+  top: 0;
+  left: 0;
+}
+
+.profile .info {
+  z-index: 5;
+}
+
+.profile .info form {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  margin: 1rem;
+  background-color: var(--neutral2);
+  box-shadow: 3px 3px 8px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  animation: sticky-note 0.6s ease forwards;
+  transform: rotateY(40deg) skewX(-10deg) skewY(0deg);
+  opacity: 0;
+  transform-origin: center;
+}
+
+.profile .info form .form-section {
+  margin: .5rem;
+  width: 100%;
+}
+.profile .info form .form-section.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.profile .avatar {
+  overflow: hidden;
+  min-width: 400px;
+  min-height: 400px;
+  border-radius: 50%;
+  font-size: 8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--neutral1);
+  color: var(--neutral2);
+  padding: 1rem;
+  background-size: 110%;
+  background-repeat: no-repeat;
+  z-index: 5;
+  opacity: 0;
+  animation: back-anim 1s ease forwards;
+}
+
+.objects div {
+  position: absolute;
+  left: 0;
+  width: 120px;
+  height: 10px;
+  background-color: var(--accent2);
+  border-radius: 15px;
+  animation: moveit linear infinite alternate;
+  opacity: 0.1;
+}
+
+.objects div:nth-child(1) {
+  left: -130px;
+  bottom: 300px;
+  animation-duration: 8s;
+  animation-delay: 3s;
+}
+.objects div:nth-child(2) {
+  left: -130px;
+  bottom: 500px;
+  animation-duration: 7s;
+}
+.objects div:nth-child(3) {
+  left: -130px;
+  animation-delay: 2s;
+  bottom: 130px;
+  animation-duration: 9s;
+}
+.objects div:nth-child(4) {
+  left: -130px;
+  animation-direction: alternate-reverse;
+  bottom: 600px;
+  animation-duration: 10s;
+}
+.objects div:nth-child(5) {
+  left: -130px;
+  animation-direction: alternate-reverse;
+  bottom: 400px;
+  animation-duration: 10s;
+}
+.objects div:nth-child(6) {
+  left: -130px;
+  animation-delay: 3s;
+  bottom: 800px;
+  animation-duration: 8s;
+}
+
+@media only screen and (max-width: 800px) {
+  .profile .avatar {
+    min-width: 200px;
+    min-height: 200px;
+  }
+}
+
+@keyframes sticky-note {
+  to {
+    opacity: 1;
+    transform: translateZ(0px);
+  }
+}
+
+@keyframes back-anim {
+  from {
+    background-position: top;
+  }
+  to {
+    opacity: 1;
+    background-position: 50% 50%;
+  }
+}
+
+@keyframes moveit {
+  from {
+    transform: translateX(-30vw);
+  }
+  to {
+    transform: translateX(130vw);
+  }
+}

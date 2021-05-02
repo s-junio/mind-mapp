@@ -7,6 +7,12 @@ import Switcher from "../Switcher/Switcher";
 import "./NavDrawer.css";
 
 function NavDrawer(props: any) {
+  type Route = {
+    path: string;
+    title: string;
+    module: string;
+  };
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleActionClick = (ev: React.MouseEvent) => {
@@ -15,7 +21,7 @@ function NavDrawer(props: any) {
     target.blur();
   };
 
-  const handleSwitcherChange = (ev: any) => {
+  const handleSwitcherChange = (ev: React.MouseEvent) => {
     props.handleSwitch(ev);
   };
 
@@ -34,21 +40,23 @@ function NavDrawer(props: any) {
               <span>s-junio</span>
             </div>
             <div className="links">
-              <Link style={{ animationDelay: ".08s" }} to="/">
-                Home
-              </Link>
-              <Link style={{ animationDelay: ".12s" }} to="/projects">
-                Projects
-              </Link>
-              <Link style={{ animationDelay: ".18s" }} to="/mapp">
-                New Mapp
-              </Link>
+              {props.routes &&
+                props.routes.map((route: Route) => (
+                  <Link
+                    key={route.path}
+                    onClick={handleActionClick}
+                    style={{ animationDelay: ".08s" }}
+                    to={route.path}
+                  >
+                    {route.title}
+                  </Link>
+                ))}
             </div>
             <Switcher switchHandler={handleSwitcherChange}></Switcher>
           </>
         )}
       </div>
-      {isOpen && <div className="blanket"></div>}
+      {isOpen && <div className="blanket" onClick={handleActionClick}></div>}
     </>
   );
 }

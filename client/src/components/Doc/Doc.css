@@ -1,0 +1,55 @@
+.doc {
+  width: 800px;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.doc .section {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.doc .section h1::before,
+.doc .section h2::before,
+.doc .section h3::before,
+.doc .section h4::before,
+.doc .section h5::before {
+  content: counters(outline, '.') ". ";
+  counter-increment: outline;
+}
+
+/* remove later */
+.doc span {
+  font-size: 1rem;
+  opacity: 0.6;
+  padding: .5rem
+}
+
+.doc .item {
+  border: 5px solid transparent;
+  border-radius: 10px;
+  margin-left: .5rem;
+}
+.doc .outline-helper {
+  counter-reset: outline;
+}
+
+
+.doc .item.scrolled-to {
+  animation: attention .7s ease-in;
+}
+
+@keyframes attention {
+  0% {
+    filter: brightness(100%);
+    border-color: transparent;
+  }
+  50% {
+    filter: brightness(150%);
+    border-color: var(--neutral1);
+  }
+  100% {
+    border-color: transparent;
+  }
+}
