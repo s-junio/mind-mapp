@@ -35,11 +35,13 @@
 }
 
 .profile .info form .form-section {
+  margin: .5rem;
+  width: 100%;
+}
+.profile .info form .form-section.row {
   display: flex;
   flex-wrap: wrap;
-  margin: 1rem;
   justify-content: space-between;
-  width: 100%;
 }
 
 .profile .avatar {
@@ -73,36 +75,36 @@
 }
 
 .objects div:nth-child(1) {
-  left: -100px;
+  left: -130px;
   bottom: 300px;
   animation-duration: 8s;
   animation-delay: 3s;
 }
 .objects div:nth-child(2) {
-  left: -100px;
+  left: -130px;
   bottom: 500px;
   animation-duration: 7s;
 }
 .objects div:nth-child(3) {
-  left: -100px;
+  left: -130px;
   animation-delay: 2s;
-  bottom: 100px;
+  bottom: 130px;
   animation-duration: 9s;
 }
 .objects div:nth-child(4) {
-  left: -100px;
+  left: -130px;
   animation-direction: alternate-reverse;
   bottom: 600px;
   animation-duration: 10s;
 }
 .objects div:nth-child(5) {
-  left: -100px;
+  left: -130px;
   animation-direction: alternate-reverse;
   bottom: 400px;
   animation-duration: 10s;
 }
 .objects div:nth-child(6) {
-  left: -100px;
+  left: -130px;
   animation-delay: 3s;
   bottom: 800px;
   animation-duration: 8s;

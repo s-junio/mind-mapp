@@ -72,7 +72,8 @@ function MappFlow() {
       id: "1",
       type: "special",
       position: { x: 10, y: 10 },
-      data: { headerTitle: "Introduction", headerType: "Chapter 1" },
+      data: { headerTitle: "Introduction", headerType: "Chapter 1"
+    , children: ['11', '12', '13'] },
     },
     {
       id: "2",
@@ -94,6 +95,8 @@ function MappFlow() {
         headerTitle: "Why..........",
         headerType: "Sub 1",
         color: "#FC5130",
+        parent: '1',
+        children: ['111', '112', '113']
       },
     },
     {
@@ -104,6 +107,7 @@ function MappFlow() {
         headerTitle: "Goals.........",
         headerType: "Sub 2",
         color: "#FC5130",
+        parent: '1'
       },
     },
     {
@@ -114,6 +118,63 @@ function MappFlow() {
         headerTitle: "Principles.............",
         headerType: "Sub 3",
         color: "#FC5130",
+        parent: '1'
+      },
+    },
+    {
+      id: "111",
+      type: "special",
+      position: { x: 10, y: 400 },
+      data: {
+        headerTitle: "Principles.............",
+        headerType: "Subsub 1",
+        color: "#C8C8C8",
+        parent: '1'
+      },
+    },
+    {
+      id: "112",
+      type: "special",
+      position: { x: 300, y: 400 },
+      data: {
+        headerTitle: "Principles.............",
+        headerType: "Subsub 2",
+        color: "#C8C8C8",
+        parent: '1'
+      },
+    },
+    {
+      id: "113",
+      type: "special",
+      position: { x: 600, y: 400 },
+      data: {
+        headerTitle: "Principles.............",
+        headerType: "Subsub 3",
+        color: "#C8C8C8",
+        parent: '1',
+        children: ['1141', '1142']
+      },
+    },
+    {
+      id: "1141",
+      type: "special",
+      position: { x: 100, y: 700 },
+      data: {
+        headerTitle: "Principles.............",
+        headerType: "Subsub 3",
+        color: "#D2D2D2",
+        parent: '1',
+      },
+    },
+    {
+      id: "1142",
+      type: "special",
+      position: { x: 300, y: 700 },
+      data: {
+        headerTitle: "Principles.............",
+        headerType: "Subsub 3",
+        color: "#D2D2D2",
+        parent: '1',
       },
     },
     {
@@ -160,9 +221,24 @@ function MappFlow() {
     setElements(removeFunc);
   };
 
+
+  //Not the best practice-----> change this TODO
+  const changeColor = (ev: any) => {
+    const value = ev.target.value;
+    const changedElem = elements.map(elem => {
+      if(elem.data && elem.data.color){
+        elem.data.color = value;
+      }
+      return elem;
+    });
+
+    setElements(changedElem);
+  };
+
   /* const selectedNode = useStoreState((state:any) => state.selectedElements && state.selectedElements[0]); */
   return (
     <>
+      <input type="color" id="head" name="head" onChange={changeColor}></input>
       <ReactFlow
         snapToGrid={true}
         snapGrid={[50, 50]}

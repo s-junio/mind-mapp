@@ -1,47 +1,60 @@
-import React, { useRef } from "react";
-import "./Doc.css";
-import { useStoreState } from "react-flow-renderer";
-import type { Node } from "react-flow-renderer";
+import React, { useRef } from 'react';
+import './Doc.css';
+import { useStoreState } from 'react-flow-renderer';
+import type { Node } from 'react-flow-renderer';
 
 type DocProps = {
   style?: React.CSSProperties;
 };
 
-const Item = (props: any) => (
-  <div id={props.id} className="item">
-    <div className="section">
-      <h1>{props.headerTitle}</h1>
-      <span>{props.headerType}</span>
+const Item = (props: any) => {
+  let level = props.level || 1;
+  const nextLevel = level + 1;
+
+  const renderBasedOnLevel = (lvl: number) => {
+    switch (lvl) {
+      case 1:
+        return <h1>{props.headerTitle}</h1>;
+      case 2:
+        return <h2>{props.headerTitle}</h2>;
+      case 3:
+        return <h3>{props.headerTitle}</h3>;
+      case 4:
+        return <h4>{props.headerTitle}</h4>;
+      default:
+        return <h5>{props.headerTitle}</h5>;
+    }
+  };
+
+  return (
+    <div id={`item-${props.id}`} className="item">
+      <div className="section">
+        {renderBasedOnLevel(level)}
+      </div>
+      <p style={{ textAlign: 'justify' }}>
+        officia incididunt labore laborum in sunt deserunt sint aliqua irure. Do
+        laborum consequat id minim ad deserunt deserunt reprehenderit pariatur
+        proident aliqua est anim. Consectetur veniam laborum excepteur id
+        commodo dolore dolor Lorem nulla enim incididunt nisi voluptate. Nisi
+        proident labore in sint nostrud nostrud voluptate ut elit mollit do.
+        Eiusmod ea nostrud cupidatat nisi duis aliquip.
+      </p>
+      <div className="outline-helper">
+        {props.children &&
+          props.children.map((child: Node) => (
+            <Item
+              id={child.id}
+              key={child.id}
+              headerTitle={child.data.headerTitle}
+              headerType={child.data.headerType}
+              children={child.data.children}
+              level={nextLevel}
+            ></Item>
+          ))}
+      </div>
     </div>
-    <p style={{ textAlign: "justify" }}>
-      Excepteur veniam sunt qui exercitation enim occaecat aliquip est cillum ad
-      ex occaecat ex. Lorem ad pariatur duis pariatur eu quis laboris ea. Elit
-      ullamco aute id laborum. Culpa in reprehenderit fugiat culpa laboris
-      mollit incididunt. Consequat et nisi sint dolore sit amet aliquip sit est
-      commodo consectetur esse. Ex nisi exercitation sunt non ut commodo elit
-      elit voluptate enim exercitation. Esse ea deserunt amet et amet do nostrud
-      ullamco veniam ut nostrud. Deserunt commodo duis dolore ipsum ea eiusmod.
-      Ad nostrud et Lorem occaecat culpa sunt eiusmod eu incididunt irure
-      incididunt exercitation. Mollit officia mollit proident reprehenderit
-      nostrud amet. Ad proident pariatur ad qui aliquip Lorem quis deserunt esse
-      dolore ullamco exercitation laboris eu. Pariatur ullamco ullamco nulla
-      occaecat veniam proident cupidatat pariatur proident sunt eu est. Eiusmod
-      est proident anim ipsum ad magna nisi anim ea dolor in. Nostrud incididunt
-      magna Lorem amet amet ad enim dolor esse. Amet tempor dolor et eiusmod
-      incididunt proident aute in. Adipisicing sint in aliqua do est. Veniam do
-      nostrud officia sint ipsum fugiat veniam minim. Incididunt quis laborum
-      laborum nostrud in. Sunt pariatur nulla qui irure dolore eiusmod
-      reprehenderit officia esse ad. Id commodo quis ut enim reprehenderit
-      cillum cillum eiusmod aute non eiusmod. Occaecat Lorem qui qui elit
-      officia incididunt labore laborum in sunt deserunt sint aliqua irure. Do
-      laborum consequat id minim ad deserunt deserunt reprehenderit pariatur
-      proident aliqua est anim. Consectetur veniam laborum excepteur id commodo
-      dolore dolor Lorem nulla enim incididunt nisi voluptate. Nisi proident
-      labore in sint nostrud nostrud voluptate ut elit mollit do. Eiusmod ea
-      nostrud cupidatat nisi duis aliquip.
-    </p>
-  </div>
-);
+  );
+};
 
 const Doc: React.FC<DocProps> = (props) => {
   const compareNodes = (prev: Array<Node>, next: Array<Node>): boolean => {
@@ -55,47 +68,109 @@ const Doc: React.FC<DocProps> = (props) => {
     }
     return areEqual;
   };
+  const parseNodes = function (nodes: Node[]) {
+    const hardCopy = [...nodes];
+    const nodeObj: any = {};
+    for (let i in hardCopy) {
+      const node: Node = hardCopy[i];
+      nodeObj[node.id] = node;
+    }
+    const nodesParsed = [];
 
-  const nodes = useStoreState((store: any) => store.nodes, compareNodes);
+    function getChildren(child: any) {
+      let obj;
+      if (typeof child === 'object') {
+        obj = child;
+      } else {
+        obj = nodeObj[child];
+      }
+      if (obj.data.children) {
+        obj.data.children = obj.data.children.map(getChildren);
+      }
+      return obj;
+    }
+    for (let i in hardCopy) {
+      const node = hardCopy[i];
+      if (!node.data.parent) {
+        nodesParsed.push(getChildren(node.id));
+      }
+    }
+    console.log(nodesParsed);
+    return nodesParsed;
+  };
 
-  const elem = useRef(null);
+  const nodes = useStoreState(
+    (store: any) => parseNodes(store.nodes),
+    compareNodes
+  );
+
+  const exportDoc = function () {
+    const docElem: any = elem.current;
+
+    if (docElem.innerHTML) {
+      console.log(docElem);
+      const header =
+        "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+        "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+        "xmlns='http://www.w3.org/TR/REC-html40'>" +
+        "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+      const footer = '</body></html>';
+      const sourceHTML = header + docElem.innerHTML + footer;
+      console.log(nodes);
+      const source =
+        'data:application/vnd.ms-word;charset=utf-8,' +
+        encodeURIComponent(sourceHTML);
+      const fileDownload = document.createElement('a');
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = 'document.docx';
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+    }
+  };
+
   const selectedElements = useStoreState(
     (store: any) => store.selectedElements
   );
-  console.log(selectedElements);
-  if (selectedElements && selectedElements[0]) {
-    if (elem && elem.current) {
-      const { children }: any = elem.current;
-      const child = children.namedItem(selectedElements[0].id);
-      child.scrollIntoView({ block: "start", behavior: "smooth" });
-      child.classList.remove("scrolled-to");
+  const elem = useRef(null);
+  if (elem && selectedElements && selectedElements[0]) {
+    const selectedElem = document.getElementById(
+      `item-${selectedElements[0].id}`
+    );
+    if (selectedElem) {
+      selectedElem.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      selectedElem.classList.remove('scrolled-to');
       let scrollTimeout: any;
       const current: any = elem.current;
       const handleScroll = (e: any) => {
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(function () {
-          child.classList.add("scrolled-to");
-          current.removeEventListener("scroll", handleScroll);
+          selectedElem.classList.add('scrolled-to');
+          current.removeEventListener('scroll', handleScroll);
         }, 20);
       };
-      current.addEventListener("scroll", handleScroll);
+      current.addEventListener('scroll', handleScroll);
     }
   }
 
   return (
     <div className="doc" style={props.style} ref={elem}>
-      {nodes && nodes[0] ? (
-        nodes.map((node: any) => (
-          <Item
-            id={node.id}
-            key={node.id}
-            headerTitle={node.data.headerTitle}
-            headerType={node.data.headerType}
-          ></Item>
-        ))
-      ) : (
-        <h3>*First add a node to the diagram to start*</h3>
-      )}
+      <button onClick={exportDoc}>Download</button>
+      <div className="outline-helper">
+        {nodes && nodes[0] ? (
+          nodes.map((node: any) => (
+            <Item
+              id={node.id}
+              key={node.id}
+              headerTitle={node.data.headerTitle}
+              headerType={node.data.headerType}
+              children={node.data.children}
+            ></Item>
+          ))
+        ) : (
+          <h3>*First add a node to the diagram to start*</h3>
+        )}
+      </div>
     </div>
   );
 };

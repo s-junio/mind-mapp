@@ -5,6 +5,7 @@ import "./index.css";
 import NavDrawer from "./components/NavDrawer/NavDrawer";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
+import ThemeManager from './ThemeManager';
 
 import App from "./App";
 
@@ -31,17 +32,20 @@ const routes = [
   },
 ];
 
+const TManager = ThemeManager.Instance;
+const startTheme = TManager.currentTheme;
+
 function handleSwitch(ev: any) {
-  const elem = document.getElementById("toggle");
-  if (elem) {
-    elem.classList.toggle("light-mode");
-    elem.classList.toggle("dark-mode");
-  }
+  TManager.toggleTheme();
+
 }
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <div id="toggle" className="light-mode main-window">
+      <div
+        id="toggle"
+        className={`${startTheme} main-window`}
+      >
         <NavDrawer routes={routes} handleSwitch={handleSwitch}></NavDrawer>
         <App></App>
       </div>

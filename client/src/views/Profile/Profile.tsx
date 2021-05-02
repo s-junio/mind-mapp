@@ -22,15 +22,15 @@ function Profile() {
       </div>
       <div className="info">
         <form>
-          <div className="form-section">
+          <div className="form-section row">
             <MInput id="fname" name="First Name"></MInput>
             <MInput id="lname" name="Last Name"></MInput>
             <MInput id="bday" type="date" name="Birthday"></MInput>
           </div>
-          <div className="form-section">
-            <MInput id="email" name="E-mail" type="email"></MInput>
+          <div className="form-section row">
+            <MInput id="email" name="E-mail" type="email" style={{width: '100%'}}></MInput>
           </div>
-          <div>
+          <div className="form-section">
             <MInput
               id="user"
               name="User"
