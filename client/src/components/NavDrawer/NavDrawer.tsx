@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
-import Switcher from "../Switcher/Switcher";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faUserAstronaut } from '@fortawesome/free-solid-svg-icons';
+import Switcher from '../Switcher/Switcher';
 
-import "./NavDrawer.css";
+import './NavDrawer.css';
 
 function NavDrawer(props: any) {
   type Route = {
@@ -27,7 +27,7 @@ function NavDrawer(props: any) {
 
   return (
     <>
-      <div className={isOpen ? "navdrawer open" : "navdrawer"}>
+      <div className={isOpen ? 'navdrawer open' : 'navdrawer'}>
         <button className="action-button" onClick={handleActionClick}>
           <FontAwesomeIcon icon={faBars} />
         </button>
@@ -41,14 +41,14 @@ function NavDrawer(props: any) {
             </div>
             <div className="links">
               {props.routes &&
-                props.routes.map((route: Route) => (
+                props.routes.map((route: Route, index: number) => (
                   <Link
                     key={route.path}
                     onClick={handleActionClick}
-                    style={{ animationDelay: ".08s" }}
+                    style={{ animationDelay: `${(index + 1) * 0.1}s` }}
                     to={route.path}
                   >
-                    {route.title}
+                    <span>{route.title}</span>
                   </Link>
                 ))}
             </div>

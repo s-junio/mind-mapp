@@ -41,7 +41,9 @@ function Home() {
           </div>
         </div>
       </header>
-      <div className="footer"></div>
+      <footer className="footer">
+        
+      </footer>
     </div>
   );
 }

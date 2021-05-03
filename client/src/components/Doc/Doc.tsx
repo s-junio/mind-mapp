@@ -21,16 +21,16 @@ const Item = (props: any) => {
         return <h3>{props.headerTitle}</h3>;
       case 4:
         return <h4>{props.headerTitle}</h4>;
-      default:
+      case 5:
         return <h5>{props.headerTitle}</h5>;
+      default:
+        return <h6>{props.headerTitle}</h6>;
     }
   };
 
   return (
     <div id={`item-${props.id}`} className="item">
-      <div className="section">
-        {renderBasedOnLevel(level)}
-      </div>
+      <div className="section">{renderBasedOnLevel(level)}</div>
       <p style={{ textAlign: 'justify' }}>
         officia incididunt labore laborum in sunt deserunt sint aliqua irure. Do
         laborum consequat id minim ad deserunt deserunt reprehenderit pariatur
