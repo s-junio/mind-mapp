@@ -1,8 +1,14 @@
 import React, { KeyboardEvent, useEffect, useState } from 'react';
 import ListData from '../../components/ListData/ListData';
 import { MInput } from '../../components/MInput/MInput';
-import { MiniMap } from 'react-flow-renderer';
+import { useHistory } from 'react-router-dom';
+
 import './Projects.css';
+
+interface Coords {
+  x: number;
+  y: number;
+}
 
 interface Project {
   id: string;
@@ -43,6 +49,7 @@ const data: Project[] = [
 function Projects() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [list, setList] = useState<Project[]>([]);
+  const [animCoords, setAnimCoords] = useState<Coords>({ x: 0, y: 0 });
 
   /* todo remove this */
   const sleep = (time: number) => {
@@ -78,13 +85,32 @@ function Projects() {
       }
     }
   };
+
+  const history = useHistory();
+
+  const navigate = (id: string, coords: Coords) => {
+    console.log(coords);
+    setAnimCoords(coords);
+    setTimeout(() => {
+      history.push(`/mapp?id=${id}`);
+    }, 500);
+  };
   return (
     <div className="projects">
       <div className="project-list">
         <MInput name="Search..." onKeyUp={handleSearch}></MInput>
-        <ListData list={list} isLoading={isLoading}></ListData>
+        <ListData
+          list={list}
+          isLoading={isLoading}
+          handleArrow={navigate}
+        ></ListData>
       </div>
-      <h1>Projects</h1>
+      {animCoords.x || animCoords.y ? (
+        <div
+          className="anim-helper"
+          style={{ left: animCoords.x - 50, top: animCoords.y - 50 }}
+        ></div>
+      ) : null}
     </div>
   );
 }

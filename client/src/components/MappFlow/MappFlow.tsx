@@ -1,5 +1,6 @@
-import React, { SetStateAction, useState } from "react";
-import "./MappFlow.css";
+import React, { useState } from 'react';
+
+import './MappFlow.css';
 import ReactFlow, {
   Handle,
   Position,
@@ -10,15 +11,20 @@ import ReactFlow, {
   ArrowHeadType,
   useStoreState,
   removeElements,
-} from "react-flow-renderer";
-import type { Node, NodeProps } from "react-flow-renderer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+} from 'react-flow-renderer';
+import type { Node, NodeProps } from 'react-flow-renderer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faTrash,
   faEdit,
   faArrowLeft,
   faArrowRight,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
+import { useLocation } from 'react-router-dom';
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 const RainbowButtons = () => (
   <div className="rainbow-buttons">
@@ -42,7 +48,7 @@ const CustomNodeComponent = ({ data, selected }: NodeProps) => {
   return (
     <div
       className={`custom-node react-flow__node-default ${
-        showContent || "zoomed-out"
+        showContent || 'zoomed-out'
       }`}
       data-title={data.headerType}
       style={{ backgroundColor: data.color }}
@@ -59,153 +65,159 @@ const CustomNodeComponent = ({ data, selected }: NodeProps) => {
         type="source"
         position={Position.Right}
         id="b"
-        style={{ borderRadius: "50%" }}
+        style={{ borderRadius: '50%' }}
       />
     </div>
   );
 };
 
 function MappFlow() {
+  const query = useQuery();
+
+  console.log(query.get("id")) // load data with this id
   /* Flow renderer */
   const initialElements = [
     {
-      id: "1",
-      type: "special",
+      id: '1',
+      type: 'special',
       position: { x: 10, y: 10 },
-      data: { headerTitle: "Introduction", headerType: "Chapter 1"
-    , children: ['11', '12', '13'] },
+      data: {
+        headerTitle: 'Introduction',
+        headerType: 'Chapter 1',
+        children: ['11', '12', '13'],
+      },
     },
     {
-      id: "2",
-      type: "special",
+      id: '2',
+      type: 'special',
       position: { x: 300, y: 10 },
-      data: { headerTitle: "Objectivess", headerType: "Chapter 2" },
+      data: { headerTitle: 'Objectivess', headerType: 'Chapter 2' },
     },
     {
-      id: "3",
-      type: "special",
+      id: '3',
+      type: 'special',
       position: { x: 600, y: 10 },
-      data: { headerTitle: "State.............", headerType: "Chapter 3" },
+      data: { headerTitle: 'State.............', headerType: 'Chapter 3' },
     },
     {
-      id: "11",
-      type: "special",
+      id: '11',
+      type: 'special',
       position: { x: 10, y: 200 },
       data: {
-        headerTitle: "Why..........",
-        headerType: "Sub 1",
-        color: "#FC5130",
+        headerTitle: 'Why..........',
+        headerType: 'Sub 1',
+        color: '#FC5130',
         parent: '1',
-        children: ['111', '112', '113']
+        children: ['111', '112', '113'],
       },
     },
     {
-      id: "12",
-      type: "special",
+      id: '12',
+      type: 'special',
       position: { x: 300, y: 200 },
       data: {
-        headerTitle: "Goals.........",
-        headerType: "Sub 2",
-        color: "#FC5130",
-        parent: '1'
+        headerTitle: 'Goals.........',
+        headerType: 'Sub 2',
+        color: '#FC5130',
+        parent: '1',
       },
     },
     {
-      id: "13",
-      type: "special",
+      id: '13',
+      type: 'special',
       position: { x: 600, y: 200 },
       data: {
-        headerTitle: "Principles.............",
-        headerType: "Sub 3",
-        color: "#FC5130",
-        parent: '1'
+        headerTitle: 'Principles.............',
+        headerType: 'Sub 3',
+        color: '#FC5130',
+        parent: '1',
       },
     },
     {
-      id: "111",
-      type: "special",
+      id: '111',
+      type: 'special',
       position: { x: 10, y: 400 },
       data: {
-        headerTitle: "Principles.............",
-        headerType: "Subsub 1",
-        color: "#C8C8C8",
-        parent: '1'
+        headerTitle: 'Principles.............',
+        headerType: 'Subsub 1',
+        color: '#C8C8C8',
+        parent: '1',
       },
     },
     {
-      id: "112",
-      type: "special",
+      id: '112',
+      type: 'special',
       position: { x: 300, y: 400 },
       data: {
-        headerTitle: "Principles.............",
-        headerType: "Subsub 2",
-        color: "#C8C8C8",
-        parent: '1'
+        headerTitle: 'Principles.............',
+        headerType: 'Subsub 2',
+        color: '#C8C8C8',
+        parent: '1',
       },
     },
     {
-      id: "113",
-      type: "special",
+      id: '113',
+      type: 'special',
       position: { x: 600, y: 400 },
       data: {
-        headerTitle: "Principles.............",
-        headerType: "Subsub 3",
-        color: "#C8C8C8",
+        headerTitle: 'Principles.............',
+        headerType: 'Subsub 3',
+        color: '#C8C8C8',
         parent: '1',
-        children: ['1141', '1142']
+        children: ['1141', '1142'],
       },
     },
     {
-      id: "1141",
-      type: "special",
+      id: '1141',
+      type: 'special',
       position: { x: 100, y: 700 },
       data: {
-        headerTitle: "Principles.............",
-        headerType: "Subsub 3",
-        color: "#D2D2D2",
+        headerTitle: 'Principles.............',
+        headerType: 'Subsub 3',
+        color: '#D2D2D2',
         parent: '1',
       },
     },
     {
-      id: "1142",
-      type: "special",
+      id: '1142',
+      type: 'special',
       position: { x: 300, y: 700 },
       data: {
-        headerTitle: "Principles.............",
-        headerType: "Subsub 3",
-        color: "#D2D2D2",
+        headerTitle: 'Principles.............',
+        headerType: 'Subsub 3',
+        color: '#D2D2D2',
         parent: '1',
       },
     },
     {
-      id: "e1-2",
-      type: "smoothstep",
-      source: "1",
-      target: "2",
+      id: 'e1-2',
+      type: 'smoothstep',
+      source: '1',
+      target: '2',
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     },
     {
-      id: "e2-3",
-      type: "smoothstep",
-      source: "2",
-      target: "3",
+      id: 'e2-3',
+      type: 'smoothstep',
+      source: '2',
+      target: '3',
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     },
     {
-      id: "e11-12",
-      type: "smoothstep",
-      source: "11",
-      target: "12",
+      id: 'e11-12',
+      type: 'smoothstep',
+      source: '11',
+      target: '12',
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     },
     {
-      id: "e12-13",
-      type: "smoothstep",
-      source: "12",
-      target: "13",
+      id: 'e12-13',
+      type: 'smoothstep',
+      source: '12',
+      target: '13',
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     },
@@ -221,12 +233,11 @@ function MappFlow() {
     setElements(removeFunc);
   };
 
-
   //Not the best practice-----> change this TODO
   const changeColor = (ev: any) => {
     const value = ev.target.value;
-    const changedElem = elements.map(elem => {
-      if(elem.data && elem.data.color){
+    const changedElem = elements.map((elem) => {
+      if (elem.data && elem.data.color) {
         elem.data.color = value;
       }
       return elem;
@@ -258,13 +269,13 @@ function MappFlow() {
         <MiniMap
           nodeStrokeColor={(n: any) => {
             if (n.style?.background) return n.style.background;
-            if (n.type === "input") return "#0041d0";
-            if (n.type === "output") return "#ff0072";
-            if (n.type === "special") return "#1a192b";
+            if (n.type === 'input') return '#0041d0';
+            if (n.type === 'output') return '#ff0072';
+            if (n.type === 'special') return '#1a192b';
 
-            return "#eee";
+            return '#eee';
           }}
-          nodeColor={(n: Node<any>) => n.data.color || "#fff"}
+          nodeColor={(n: Node<any>) => n.data.color || '#fff'}
           nodeBorderRadius={2}
         />
       </ReactFlow>
