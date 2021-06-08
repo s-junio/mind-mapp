@@ -108,7 +108,6 @@ const Doc: React.FC<DocProps> = (props) => {
     const docElem: any = elem.current;
 
     if (docElem.innerHTML) {
-      console.log(docElem);
       const header =
         "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
         "xmlns:w='urn:schemas-microsoft-com:office:word' " +
@@ -140,7 +139,7 @@ const Doc: React.FC<DocProps> = (props) => {
     if (selectedElem) {
       selectedElem.scrollIntoView({ block: 'start', behavior: 'smooth' });
       selectedElem.classList.remove('scrolled-to');
-      let scrollTimeout: any;
+      let scrollTimeout: ReturnType<typeof setTimeout>;
       const current: any = elem.current;
       const handleScroll = (e: any) => {
         clearTimeout(scrollTimeout);

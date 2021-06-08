@@ -1,24 +1,32 @@
 .mbutton {
   font-size: 2rem;
+  min-height: 90px;
   padding: 1rem 2rem;
   cursor: pointer;
   border: 10px solid;
   border-image-slice: 1;
-  border-image-source: linear-gradient(to right, var(--primary), var(--accent1));
+  border-image-source: linear-gradient(
+    to right,
+    var(--primary),
+    var(--accent1)
+  );
   float: right;
   background-color: transparent;
   position: relative;
   overflow: hidden;
 }
 
-.mbutton span{
+.mbutton span {
   color: var(--font-color);
+  background-image: linear-gradient(to right, var(--primary), var(--accent1));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-transform: uppercase;
   font-family: 'Varela Round', sans-serif;
 }
 
-.mbutton::after {
-  content: "";
+.mbutton::before {
+  content: '';
   position: absolute;
   top: 50%;
   left: 0;
@@ -32,92 +40,17 @@
   transition: transform 0.6s ease;
 }
 
-.mbutton:hover::after {
+.mbutton[data-loading='true'] {
+  pointer-events: none;
+}
+
+.mbutton:focus::before,
+.mbutton:hover::before,
+.mbutton[data-loading='true']::before {
   transform: scale(2);
 }
-/* .mbutton:hover {
-  -webkit-animation: rubberBand 1s;
-  animation: rubberBand 1s;
-  -webkit-transform-origin: center;
-  transform-origin: center;
-} */
-/* 
-@-webkit-keyframes rubberBand {
-  0% {
-    -webkit-transform: scaleX(1);
-    transform: scaleX(1);
-  }
 
-  30% {
-    -webkit-transform: scale3d(1.25, 0.75, 1);
-    transform: scale3d(1.25, 0.75, 1);
-  }
-
-  40% {
-    -webkit-transform: scale3d(0.75, 1.25, 1);
-    transform: scale3d(0.75, 1.25, 1);
-  }
-
-  50% {
-    -webkit-transform: scale3d(1.15, 0.85, 1);
-    transform: scale3d(1.15, 0.85, 1);
-  }
-
-  65% {
-    -webkit-transform: scale3d(0.95, 1.05, 1);
-    transform: scale3d(0.95, 1.05, 1);
-  }
-
-  75% {
-    -webkit-transform: scale3d(1.05, 0.95, 1);
-    transform: scale3d(1.05, 0.95, 1);
-  }
-
-  to {
-    -webkit-transform: scaleX(1);
-    transform: scaleX(1);
-  }
+.mbutton:focus span,
+.mbutton:hover span {
+  -webkit-text-fill-color: white;
 }
-
-@keyframes rubberBand {
-  0% {
-    -webkit-transform: scaleX(1);
-    transform: scaleX(1);
-  }
-
-  30% {
-    -webkit-transform: scale3d(1.25, 0.75, 1);
-    transform: scale3d(1.25, 0.75, 1);
-  }
-
-  40% {
-    -webkit-transform: scale3d(0.75, 1.25, 1);
-    transform: scale3d(0.75, 1.25, 1);
-  }
-
-  50% {
-    -webkit-transform: scale3d(1.15, 0.85, 1);
-    transform: scale3d(1.15, 0.85, 1);
-  }
-
-  65% {
-    -webkit-transform: scale3d(0.95, 1.05, 1);
-    transform: scale3d(0.95, 1.05, 1);
-  }
-
-  75% {
-    -webkit-transform: scale3d(1.05, 0.95, 1);
-    transform: scale3d(1.05, 0.95, 1);
-  }
-
-  to {
-    -webkit-transform: scaleX(1);
-    transform: scaleX(1);
-  }
-}
-
-.animate__rubberBand {
-  -webkit-animation-name: rubberBand;
-  animation-name: rubberBand;
-}
- */

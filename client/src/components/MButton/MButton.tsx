@@ -1,16 +1,23 @@
-import React from "react";
-import "./MButton.css";
+import React, { ButtonHTMLAttributes, MouseEventHandler } from 'react';
+import Loader from '../Loader/Loader';
+import './MButton.css';
 
-type Button={ 
-    handleClick:()=>void,
-    label:string;
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  handleClick: MouseEventHandler<HTMLButtonElement>;
+  label: string;
+  loading?: boolean;
 }
 
-
-function MButton(props:Button) {
-        
+const MButton: React.FC<ButtonProps> = (props) => {
+  const handleClick: MouseEventHandler<HTMLButtonElement> = (ev) => {
+    if (!props.loading) {
+      props.handleClick(ev);
+    }
+  };
   return (
-    <button onClick={props.handleClick} className="mbutton"><span>{props.label}</span></button>
+    <button onClick={handleClick} className="mbutton" {...props} data-loading={props.loading}>
+      {props.loading ? <Loader></Loader> : <span>{props.label}</span>}
+    </button>
   );
-}
+};
 export default MButton;

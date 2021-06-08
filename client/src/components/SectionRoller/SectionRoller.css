@@ -1,0 +1,47 @@
+.section-roller {
+  position: fixed;
+  top: 50%;
+  left: 10px;
+  list-style-type: none;
+  pointer-events: none;
+}
+
+.section-roller ul {
+  list-style-type: none;
+  transition: transform 0.3s ease;
+  margin: 0;
+}
+
+.section-roller .pointer {
+  display: block;
+  position: absolute;
+  left: 0px;
+  top: 2px;
+}
+
+.section-roller #point-path {
+  fill: var(--accent1);
+}
+
+.section-roller #point-path #inner{
+  fill: var(--accent1);
+  filter: brightness(.8);
+}
+
+.section-roller li {
+  height: 25px;
+}
+.section-roller li.selected a{
+  color: var(--accent1);
+  filter: brightness(1.2);
+}
+
+.section-roller a {
+  color: var(--neutral1);
+  text-decoration: none;
+  pointer-events: all;
+}
+
+.section-roller a:hover {
+  filter: brightness(1.4);
+}

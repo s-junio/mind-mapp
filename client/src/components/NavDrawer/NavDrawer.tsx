@@ -6,12 +6,18 @@ import Switcher from '../Switcher/Switcher';
 
 import './NavDrawer.css';
 
+import UserManager from '../../UserManager';
+
 function NavDrawer(props: any) {
   type Route = {
     path: string;
     title: string;
     module: string;
   };
+
+  const UserM = UserManager.Instance;
+
+  const userInfo = UserM.getUserInfo();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -34,10 +40,17 @@ function NavDrawer(props: any) {
         {isOpen && (
           <>
             <div className="user">
-              <div className="avatar">
-                <FontAwesomeIcon icon={faUserAstronaut} />
+              <div
+                className="avatar"
+                style={{
+                  backgroundImage: `url(${userInfo.avatar})`,
+                }}
+              >
+                {userInfo.avatar ? null : (
+                  <FontAwesomeIcon icon={faUserAstronaut} />
+                )}
               </div>
-              <span>s-junio</span>
+              <span>{userInfo.userName}</span>
             </div>
             <div className="links">
               {props.routes &&

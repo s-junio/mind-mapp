@@ -5,21 +5,63 @@
   overflow: hidden !important;
 }
 
-.projects h1 {
-  font-size: 5rem;
-  writing-mode: vertical-lr;
-  text-orientation: sideways;
-  transform: rotate(180deg);
-  font-family: 'Zen Dots', cursive;
-}
-
 .project-list {
   width: 100%;
+  max-width: 600px;
   height: 100%;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  padding: 3rem;
+  padding-top: 3rem;
+  z-index: 1;
+}
+
+.undraw {
+  position: absolute;
+  left: 0;
+  width: 420px;
+  height: 420px;
+  bottom: 0;
+}
+
+.undraw #paper1 {
+  fill: var(--accent2);
+}
+.undraw #paper2,
+.undraw #paper4,
+.undraw #shirt,
+.undraw #arm-left,
+.undraw #arm-right {
+  fill: var(--primary);
+}
+
+.undraw #paper3-group,
+.undraw #paper4-group,
+.undraw #paper5-group {
+  transform-origin: center;
+  animation: float 8s infinite ease alternate;
+}
+
+.undraw #paper1-group,
+.undraw #paper2-group {
+  transform-origin: center;
+  animation: float2 10s infinite ease alternate;
+}
+
+
+.undraw #paper3,
+.undraw #paper5 {
+  fill: var(--neutral1);
+}
+
+.projects .paint {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  clip-path: polygon(83% 84%, 100% 0, 100% 100%, 0% 100%);
+  top: 0;
+  left: 0;
 }
 
 .anim-helper {
@@ -29,11 +71,29 @@
   border-radius: 50%;
   animation: inflate 0.6s ease forwards;
   background-color: var(--secondary);
+  z-index: 2;
 }
 
 @keyframes inflate {
   to {
     background: var(--neutral2);
     transform: scale(20);
+  }
+}
+
+@keyframes float {
+  from {
+    transform: rotate(-20deg);
+  }
+  to {
+    transform: rotate(20deg) translate(-5px, 5px);
+  }
+}
+@keyframes float2 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-30deg) translate(10px, 15px);
   }
 }

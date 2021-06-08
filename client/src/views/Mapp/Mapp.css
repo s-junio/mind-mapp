@@ -8,6 +8,98 @@
   justify-content: center;
   height: var(--header-height);
   width: 100%;
+  position: relative;
+  background-color: var(--primary);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.mapp-header.fetching::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  left: 0;
+  background-image: linear-gradient(
+    120deg,
+    var(--primary),
+    rgba(212, 212, 212, 0.18),
+    var(--primary),
+    rgba(212, 212, 212, 0.18),
+    var(--primary),
+    rgba(212, 212, 212, 0.18),
+    var(--primary),
+    rgba(212, 212, 212, 0.18),
+    var(--primary),
+    rgba(212, 212, 212, 0.18),
+    var(--primary),
+    rgba(212, 212, 212, 0.18),
+    var(--primary),
+    rgba(212, 212, 212, 0.18),
+    var(--primary),
+    rgba(212, 212, 212, 0.18),
+    var(--primary)
+  );
+  height: 100%;
+  animation: fetching 2s infinite linear;
+}
+
+@keyframes fetching {
+  from {
+    left: -100%;
+  }
+  to {
+    left: 0;
+  }
+}
+
+.mapp-header .title-input {
+  display: flex;
+  position: relative;
+}
+
+
+.mapp-header .title-input .input {
+  border: none;
+  background-color: transparent;
+  color: var(--neutral2);
+  font-size: 2rem;
+  font-family: 'Oxygen', sans-serif;
+  padding: 5px;
+  cursor: default;
+}
+
+.mapp-header .title-input .input:not(:read-only) {
+  cursor: text;
+}
+
+.mapp-header .title-input .input:focus-within {
+  outline: none;
+  border: 2px solid var(--primary);
+  border-radius: 3px;
+}
+
+.mapp-header .actions {
+  height: 100%;
+  width: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  right: -30px;
+  color: var(--neutral2);
+}
+
+.mapp-header .actions .action {
+  cursor: pointer;
+  display: none;
+}
+.mapp-header .actions .action:hover {
+  filter: brightness(1.4);
+}
+
+.mapp-header .title-input:hover .action{
+  display: block;
 }
 
 .mapp-content {
@@ -22,12 +114,11 @@
   min-width: 20px;
   height: 100%;
   position: relative;
-  z-index: 11;
   cursor: pointer;
 }
 
 .separator::before {
-  content: "";
+  content: '';
   width: 30px;
   height: 80px;
   position: absolute;
@@ -48,9 +139,10 @@
   left: -15px;
 }
 
-.separator .icon svg{
-  transition: all .4s ease-in;
+.separator .icon svg {
+  transition: all 0.4s ease-in;
 }
+
 
 @keyframes swing {
   0%,
@@ -76,3 +168,5 @@
     transform: translate3d(2px, 0, 0);
   }
 }
+
+
