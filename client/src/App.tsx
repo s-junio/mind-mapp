@@ -1,17 +1,16 @@
-import React, { Suspense, lazy } from "react";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+import React, { Suspense, lazy } from 'react';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
-import Loader from "./components/Loader/Loader";
-import { Switch, Route, useLocation } from "react-router-dom";
+import Loader from './components/Loader/Loader';
+import { Switch, Route, useLocation } from 'react-router-dom';
 
-const Home = lazy(() => import("./views/Home/Home"));
-const Projects = lazy(() => import("./views/Projects/Projects"));
-const Mapp = lazy(() => import("./views/Mapp/Mapp"));
-const Profile = lazy(() => import("./views/Profile/Profile"));
+const Home = lazy(() => import('./views/Home/Home'));
+const Projects = lazy(() => import('./views/Projects/Projects'));
+const Mapp = lazy(() => import('./views/Mapp/Mapp'));
+const Profile = lazy(() => import('./views/Profile/Profile'));
 
 function App() {
   let location = useLocation();
-
   return (
     <div className="content">
       <Suspense fallback={<Loader></Loader>}>

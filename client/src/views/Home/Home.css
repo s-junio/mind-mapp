@@ -1,6 +1,8 @@
 .home-wrapper {
   height: 100%;
   width: 100%;
+  padding-left: 10rem;
+  box-sizing: border-box;
 }
 
 .Home-header {
@@ -11,8 +13,7 @@
   font-size: calc(10px + 2vmin);
   color: var(--neutral1);
   perspective: 500px;
-  height: calc(100% - 70px);
-  overflow: auto;
+  height: 100vh;
 }
 
 .greeting h1 {
@@ -27,10 +28,36 @@
   filter: drop-shadow(2px 2px 1px rgba(51, 51, 51, 0.363));
 }
 
+header h2 {
+  font-size: 2.5rem;
+  position: relative;
+}
+
+header h2::before {
+  content: '';
+  width: 50px;
+  height: 30px;
+  background-color: var(--secondary);
+  display: inline-block;
+  border-radius: 10px 0px 5px 0;
+  margin-right: 0.5rem;
+}
+
+header h2::after {
+  content: '';
+  background-color: var(--secondary);
+  width: 200px;
+  height: 5px;
+  position: absolute;
+  left: 0;
+  bottom: 5px;
+}
+
 .footer {
   width: 100%;
-  height: 70px;
+  height: 90px;
   background-color: var(--primary);
+  color: var(--neutral2);
 }
 
 .cards {

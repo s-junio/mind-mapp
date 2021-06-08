@@ -23,7 +23,7 @@
   border-radius: 50%;
 }
 
-.circle {
+.card .circle {
   width: 20rem;
   height: 20rem;
   background: linear-gradient(to right, var(--accent1), var(--primary));
@@ -32,12 +32,12 @@
   z-index: 1;
 }
 
-.info h1 {
+.card .info h1 {
   font-size: 3rem;
   transition: all 0.75s ease-out;
 }
 
-.info h3 {
+.card .info h3 {
   font-size: 1.3rem;
   padding: 2rem 0rem;
   color: var(--neutral1);
@@ -45,12 +45,12 @@
   transition: all 0.75s ease-out;
 }
 
-button.active {
+.card button.active {
   background: var(--neutral1);
   color: white;
 }
 
-.contact {
+.card .contact {
   margin-top: 5rem;
   transition: all 0.75s ease-out;
 }
@@ -70,7 +70,7 @@ button.active {
   transform: translateZ(75px);
 }
 
-.contact button {
+.card .contact button {
   width: 100%;
   padding: 1rem 0rem;
   background: #f54642;

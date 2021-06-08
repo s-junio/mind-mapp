@@ -3,6 +3,23 @@
   height: 60px;
   margin: 1rem 0;
   overflow: hidden;
+  flex: 1 0 auto; /* for flex containers not shrinking */
+}
+
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 1px solid var(--primary);
+  -webkit-text-fill-color: var(--accent1);
+  background-color: 0 0 0px 1000px rgba(0, 0, 0, 0.308) inset;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .m-input input {
@@ -13,17 +30,15 @@
   background-color: transparent;
   color: var(--font-color);
   font-size: 1.5rem;
-
 }
 .m-input input::placeholder {
-    color:transparent;
-    user-select: none;
+  color: transparent;
+  user-select: none;
 }
 
 .m-input input:focus {
-    outline: none;
+  outline: none;
 }
-
 
 .label {
   position: absolute;
@@ -40,7 +55,7 @@ input:not(:read-only) + .label {
 }
 
 .label::after {
-  content: "";
+  content: '';
   width: 100%;
   height: 3px;
   position: absolute;
@@ -48,10 +63,10 @@ input:not(:read-only) + .label {
   left: 0;
   border-bottom: 2px solid var(--primary);
   transform: translateX(-100%);
-  transition: all .3s ease-in;
+  transition: all 0.3s ease-in;
 }
 
-.m-input:focus-within .label::after {
+.m-input:focus-within input:not(:read-only) + .label::after {
   transform: translateX(0);
 }
 
@@ -59,19 +74,30 @@ input:not(:read-only) + .label {
   position: absolute;
   bottom: 5px;
   left: 0px;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
+  width: 100%;
 }
 
+.label-content span {
+  color: var(--font-color);
+  font-size: 0.8rem;
+  position: absolute;
+  width: 100%;
+  text-align: right;
+  right: 0;
+  bottom: 0;
+}
 .m-input input:focus + .label .label-content,
 .m-input :not(input:placeholder-shown) + .label .label-content {
   transform: translateY(-130%);
   color: var(--primary);
 }
 
-.m-input input:invalid + .label .label-content{
-    color: var(--alert);
+.m-input.run-validation input:invalid + .label .label-content {
+  color: var(--alert);
 }
 
-.m-input input:invalid + .label::after{
-    border-color: var(--alert);
+.m-input.run-validation input:invalid + .label::after {
+  border-color: var(--alert);
 }
+

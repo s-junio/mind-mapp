@@ -1,11 +1,12 @@
-import React from "react";
-import "./Dialog.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import React from 'react';
+import './Dialog.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 type DialogProps = {
   show: boolean;
   onAction: (ev: React.MouseEvent) => void;
+  onCancel: () => void;
 };
 
 const Dialog: React.FC<DialogProps> = (props) => {
@@ -24,7 +25,9 @@ const Dialog: React.FC<DialogProps> = (props) => {
             Yes
             <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
           </button>
-          <button /* onClick={onAction} */ className="cancel">No</button>
+          <button onClick={props.onCancel} className="cancel">
+            No
+          </button>
         </div>
       </div>
     </div>

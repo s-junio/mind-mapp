@@ -3,11 +3,7 @@ import "./Loader.css";
 
 function Loader() {
   return (
-    <div className="loader">
-      <span className="tick"></span>
-      <span className="tick"></span>
-      <span className="tick"></span>
-    </div>
+    <div className="lds-ripple"><div></div><div></div></div>
   );
 }
 

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
-import Switcher from "../Switcher/Switcher";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faUserAstronaut } from '@fortawesome/free-solid-svg-icons';
+import Switcher from '../Switcher/Switcher';
 
-import "./NavDrawer.css";
+import './NavDrawer.css';
+
+import UserManager from '../../UserManager';
 
 function NavDrawer(props: any) {
   type Route = {
@@ -12,6 +14,10 @@ function NavDrawer(props: any) {
     title: string;
     module: string;
   };
+
+  const UserM = UserManager.Instance;
+
+  const userInfo = UserM.getUserInfo();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -27,28 +33,35 @@ function NavDrawer(props: any) {
 
   return (
     <>
-      <div className={isOpen ? "navdrawer open" : "navdrawer"}>
+      <div className={isOpen ? 'navdrawer open' : 'navdrawer'}>
         <button className="action-button" onClick={handleActionClick}>
           <FontAwesomeIcon icon={faBars} />
         </button>
         {isOpen && (
           <>
             <div className="user">
-              <div className="avatar">
-                <FontAwesomeIcon icon={faUserAstronaut} />
+              <div
+                className="avatar"
+                style={{
+                  backgroundImage: `url(${userInfo.avatar})`,
+                }}
+              >
+                {userInfo.avatar ? null : (
+                  <FontAwesomeIcon icon={faUserAstronaut} />
+                )}
               </div>
-              <span>s-junio</span>
+              <span>{userInfo.userName}</span>
             </div>
             <div className="links">
               {props.routes &&
-                props.routes.map((route: Route) => (
+                props.routes.map((route: Route, index: number) => (
                   <Link
                     key={route.path}
                     onClick={handleActionClick}
-                    style={{ animationDelay: ".08s" }}
+                    style={{ animationDelay: `${(index + 1) * 0.1}s` }}
                     to={route.path}
                   >
-                    {route.title}
+                    <span>{route.title}</span>
                   </Link>
                 ))}
             </div>

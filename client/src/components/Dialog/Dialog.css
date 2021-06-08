@@ -14,7 +14,7 @@
 
 .dialog {
   width: 400px;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(29, 29, 29, 0.6);
   text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.432);
   box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.432);
   border-radius: 10px;

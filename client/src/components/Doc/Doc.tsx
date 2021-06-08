@@ -21,16 +21,16 @@ const Item = (props: any) => {
         return <h3>{props.headerTitle}</h3>;
       case 4:
         return <h4>{props.headerTitle}</h4>;
-      default:
+      case 5:
         return <h5>{props.headerTitle}</h5>;
+      default:
+        return <h6>{props.headerTitle}</h6>;
     }
   };
 
   return (
     <div id={`item-${props.id}`} className="item">
-      <div className="section">
-        {renderBasedOnLevel(level)}
-      </div>
+      <div className="section">{renderBasedOnLevel(level)}</div>
       <p style={{ textAlign: 'justify' }}>
         officia incididunt labore laborum in sunt deserunt sint aliqua irure. Do
         laborum consequat id minim ad deserunt deserunt reprehenderit pariatur
@@ -108,7 +108,6 @@ const Doc: React.FC<DocProps> = (props) => {
     const docElem: any = elem.current;
 
     if (docElem.innerHTML) {
-      console.log(docElem);
       const header =
         "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
         "xmlns:w='urn:schemas-microsoft-com:office:word' " +
@@ -140,7 +139,7 @@ const Doc: React.FC<DocProps> = (props) => {
     if (selectedElem) {
       selectedElem.scrollIntoView({ block: 'start', behavior: 'smooth' });
       selectedElem.classList.remove('scrolled-to');
-      let scrollTimeout: any;
+      let scrollTimeout: ReturnType<typeof setTimeout>;
       const current: any = elem.current;
       const handleScroll = (e: any) => {
         clearTimeout(scrollTimeout);

@@ -46,8 +46,8 @@
 
 .profile .avatar {
   overflow: hidden;
-  min-width: 400px;
-  min-height: 400px;
+  min-width: 350px;
+  min-height: 350px;
   border-radius: 50%;
   font-size: 8rem;
   display: flex;
@@ -61,6 +61,7 @@
   z-index: 5;
   opacity: 0;
   animation: back-anim 1s ease forwards;
+  border: 7px solid;
 }
 
 .objects div {

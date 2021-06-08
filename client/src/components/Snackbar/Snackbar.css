@@ -1,0 +1,71 @@
+.snackbar {
+  width: 600px;
+  max-width: 80%;
+  height: 60px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  overflow: hidden;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.26);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  animation: flow-up 0.4s ease-in forwards;
+}
+
+.snackbar > div:first-child {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.snackbar .icon-space {
+  width: 70px;
+  height: 100%;
+  background-color: var(--info);
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.snackbar .dismiss {
+  width: 70px;
+  height: 100%;
+  color: var(--neutral1);
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  justify-self: flex-end;
+  transition: filter 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.snackbar .dismiss:hover {
+  filter: brightness(1.4);
+}
+
+.progress-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.progress-ring__circle {
+  transition: stroke-dashoffset 0.35s linear;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+@keyframes flow-up {
+  to {
+    bottom: 30px;
+  }
+}
