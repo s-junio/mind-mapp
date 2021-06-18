@@ -1,8 +1,11 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
 
 const app = express();
-const mongoose = require('mongoose');
+app.use(cors());
+
 
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
 const db = mongoose.connection;
@@ -14,10 +17,9 @@ app.use(express.json());
 
 /* Routes */
 const projectsRouter = require('./routes/projects');
-app.get('/', (req, res) => {
-  res.send('oi');
-});
+const authRouter = require('./routes/auth');
 
 app.use('/projects', projectsRouter);
+app.use('/auth', authRouter);
 
 app.listen(process.env.SERVICE_PORT);

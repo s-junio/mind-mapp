@@ -7,7 +7,11 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 import ThemeManager from './ThemeManager';
 
+import axios from "axios";
 import App from "./App";
+
+axios.defaults.baseURL = 'localhost:3300';
+
 
 const routes = [
   {

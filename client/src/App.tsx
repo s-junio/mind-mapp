@@ -3,6 +3,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import Loader from './components/Loader/Loader';
 import { Switch, Route, useLocation } from 'react-router-dom';
+import LoginRegister from './views/LoginRegister/LoginRegister';
 
 const Home = lazy(() => import('./views/Home/Home'));
 const Projects = lazy(() => import('./views/Projects/Projects'));
@@ -13,6 +14,7 @@ function App() {
   let location = useLocation();
   return (
     <div className="content">
+      <LoginRegister></LoginRegister>
       <Suspense fallback={<Loader></Loader>}>
         <TransitionGroup>
           <CSSTransition

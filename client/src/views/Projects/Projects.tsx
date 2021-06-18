@@ -8,6 +8,18 @@ import DataManager from '../../DataManager';
 
 const DataInstance = DataManager.Instance;
 
+  /* remove later */
+  const Http = new XMLHttpRequest();
+  const url='http://localhost:3300/projects';
+  Http.open("GET", url);
+  Http.setRequestHeader("auth-token",'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGMwZWI1Zjg2NTNkZDQ3NjQ3YTRhYzYiLCJpYXQiOjE2MjM2NzkxMzJ9.ngkCMc_WmQez5njxGDWCeLnyjsbuTkwHZLfcv40MKqQ');
+  Http.send();
+  
+  Http.onreadystatechange = (e) => {
+    console.log(Http.responseText)
+  }
+  
+
 interface Coords {
   x: number;
   y: number;

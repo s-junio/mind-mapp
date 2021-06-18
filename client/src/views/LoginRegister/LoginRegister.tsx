@@ -1,12 +1,21 @@
 import { faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import React, { EventHandler, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import MButton from '../../components/MButton/MButton';
 import MInput, { Valid } from '../../components/MInput/MInput';
 import './LoginRegister.css';
+import axios from 'axios';
+
 const Login = () => {
   const [loading, setLoading] = useState(false);
+
+  const handleLogin: React.MouseEventHandler = async (ev) => {
+    ev.preventDefault();
+    const req = fetch('/projects');
+    console.log(req);
+    setLoading(true);
+  };
 
   const errorValidRequired: Valid = {
     message: 'This field is required',
@@ -29,10 +38,7 @@ const Login = () => {
       <MButton
         label="Login"
         loading={loading}
-        handleClick={(ev) => {
-          ev.preventDefault();
-          setLoading(true);
-        }}
+        handleClick={handleLogin}
       ></MButton>
     </form>
   );

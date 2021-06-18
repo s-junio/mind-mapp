@@ -82,7 +82,7 @@ function MappFlow() {
       type: 'special',
       position: { x: 10, y: 10 },
       data: {
-        headerTitle: 'Introduction',
+        headerTitle: 'Introdução',
         headerType: 'Chapter 1',
         children: ['11', '12', '13'],
       },
@@ -91,24 +91,23 @@ function MappFlow() {
       id: '2',
       type: 'special',
       position: { x: 300, y: 10 },
-      data: { headerTitle: 'Objectivess', headerType: 'Chapter 2' },
+      data: { headerTitle: 'Estado da Arte', headerType: 'Chapter 2' },
     },
     {
       id: '3',
       type: 'special',
       position: { x: 600, y: 10 },
-      data: { headerTitle: 'State.............', headerType: 'Chapter 3' },
+      data: { headerTitle: 'Design e implementacao', headerType: 'Chapter 3' },
     },
     {
       id: '11',
       type: 'special',
       position: { x: 10, y: 200 },
       data: {
-        headerTitle: 'Why..........',
+        headerTitle: 'Motivação',
         headerType: 'Sub 1',
         color: '#FC5130',
         parent: '1',
-        children: ['111', '112', '113'],
       },
     },
     {
@@ -116,7 +115,7 @@ function MappFlow() {
       type: 'special',
       position: { x: 300, y: 200 },
       data: {
-        headerTitle: 'Goals.........',
+        headerTitle: 'Organização',
         headerType: 'Sub 2',
         color: '#FC5130',
         parent: '1',
@@ -127,65 +126,9 @@ function MappFlow() {
       type: 'special',
       position: { x: 600, y: 200 },
       data: {
-        headerTitle: 'Principles.............',
+        headerTitle: 'Objetivos',
         headerType: 'Sub 3',
         color: '#FC5130',
-        parent: '1',
-      },
-    },
-    {
-      id: '111',
-      type: 'special',
-      position: { x: 10, y: 400 },
-      data: {
-        headerTitle: 'Principles.............',
-        headerType: 'Subsub 1',
-        color: '#C8C8C8',
-        parent: '1',
-      },
-    },
-    {
-      id: '112',
-      type: 'special',
-      position: { x: 300, y: 400 },
-      data: {
-        headerTitle: 'Principles.............',
-        headerType: 'Subsub 2',
-        color: '#C8C8C8',
-        parent: '1',
-      },
-    },
-    {
-      id: '113',
-      type: 'special',
-      position: { x: 600, y: 400 },
-      data: {
-        headerTitle: 'Principles.............',
-        headerType: 'Subsub 3',
-        color: '#C8C8C8',
-        parent: '1',
-        children: ['1141', '1142'],
-      },
-    },
-    {
-      id: '1141',
-      type: 'special',
-      position: { x: 100, y: 700 },
-      data: {
-        headerTitle: 'Principles.............',
-        headerType: 'Subsub 3',
-        color: '#D2D2D2',
-        parent: '1',
-      },
-    },
-    {
-      id: '1142',
-      type: 'special',
-      position: { x: 300, y: 700 },
-      data: {
-        headerTitle: 'Principles.............',
-        headerType: 'Subsub 3',
-        color: '#D2D2D2',
         parent: '1',
       },
     },
@@ -221,6 +164,14 @@ function MappFlow() {
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     },
+    {
+      id: 'e1-e11',
+      type: 'smoothstep',
+      source: '1',
+      target: '11',
+      animated: true,
+      arrowHeadType: ArrowHeadType.ArrowClosed,
+    },
   ];
   const [elements, setElements] = useState(initialElements);
 
@@ -233,23 +184,9 @@ function MappFlow() {
     setElements(removeFunc);
   };
 
-  //Not the best practice-----> change this TODO
-  const changeColor = (ev: any) => {
-    const value = ev.target.value;
-    const changedElem = elements.map((elem) => {
-      if (elem.data && elem.data.color) {
-        elem.data.color = value;
-      }
-      return elem;
-    });
-
-    setElements(changedElem);
-  };
-
   /* const selectedNode = useStoreState((state:any) => state.selectedElements && state.selectedElements[0]); */
   return (
     <>
-      <input type="color" id="head" name="head" onChange={changeColor}></input>
       <ReactFlow
         snapToGrid={true}
         snapGrid={[50, 50]}

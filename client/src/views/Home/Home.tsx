@@ -17,6 +17,7 @@ function Home() {
   return (
     <div className="home-wrapper">
       <header className="Home-header" id="start">
+        <div className="logo"></div>
         <div className="greeting">
           <h1>A new way to write down your thoughts.</h1>
           <MButton handleClick={goToCreate} label="Start"></MButton>
