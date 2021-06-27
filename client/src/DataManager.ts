@@ -1,3 +1,6 @@
+import UserManager from "./UserManager";
+
+const UserManagerInstance = UserManager.Instance;
 const projectData = [
   {
     title: 'Project Plansssssssssssssssssssssssss',
@@ -80,6 +83,23 @@ class DataManager {
         reject(req.error);
       };
     });
+  }
+
+  public async saveProject(projectData:any) {
+    const store = await this.getStore(DataManager.PROJECTS, 'readonly');
+    //TODO save locally
+
+    const requestOptions = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth-token': UserManagerInstance.getToken()!,
+      },
+      body: JSON.stringify(projectData),
+    };
+    
+    fetch('/api/projects', requestOptions)
+    .then((response) => {});
   }
 
   public async removeProject(id: string) {

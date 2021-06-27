@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { UserInfoContext } from '../../UserInfoProvider';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faUserAstronaut } from '@fortawesome/free-solid-svg-icons';
 import Switcher from '../Switcher/Switcher';
 
 import './NavDrawer.css';
-
 import UserManager from '../../UserManager';
+
+const UserM = UserManager.Instance;
 
 function NavDrawer(props: any) {
   type Route = {
@@ -15,9 +17,7 @@ function NavDrawer(props: any) {
     module: string;
   };
 
-  const UserM = UserManager.Instance;
-
-  const userInfo = UserM.getUserInfo();
+  const [userInfo, setUserInfo] = useContext(UserInfoContext);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -30,6 +30,11 @@ function NavDrawer(props: any) {
   const handleSwitcherChange = (ev: React.MouseEvent) => {
     props.handleSwitch(ev);
   };
+
+  const handleLogout = () => {
+    UserM.executeLogout();
+    setUserInfo({});
+  }
 
   return (
     <>
@@ -50,20 +55,33 @@ function NavDrawer(props: any) {
                   <FontAwesomeIcon icon={faUserAstronaut} />
                 )}
               </div>
-              <span>{userInfo.userName}</span>
+              {userInfo.userName ? <span>{userInfo.userName}</span> : null}
             </div>
             <div className="links">
               {props.routes &&
                 props.routes.map((route: Route, index: number) => (
-                  <Link
-                    key={route.path}
-                    onClick={handleActionClick}
-                    style={{ animationDelay: `${(index + 1) * 0.1}s` }}
-                    to={route.path}
-                  >
-                    <span>{route.title}</span>
-                  </Link>
+                  <>
+                    {!userInfo.userName && (route.path === '/profile' || route.path === '/projects') ? null : (
+                      <Link
+                        key={route.path}
+                        onClick={handleActionClick}
+                        style={{ animationDelay: `${(index + 1) * 0.1}s` }}
+                        to={route.path}
+                      >
+                        <span>{route.title}</span>
+                      </Link>
+                    )}
+                  </>
                 ))}
+              {userInfo.userName ? (
+                <div className="log-button out" onClick={handleLogout}>
+                  Logout
+                </div>
+              ) : (
+                <div className="log-button" onClick={props.handleLogin}>
+                  Login
+                </div>
+              )}
             </div>
             <Switcher switchHandler={handleSwitcherChange}></Switcher>
           </>

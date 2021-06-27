@@ -20,6 +20,19 @@
   counter-increment: outline;
 }
 
+.item p {
+  min-height: 1rem;
+}
+
+.item textarea {
+  width: 100%;
+  font-family: "Oxygen";
+  color: var(--neutral1);
+  background-color: transparent;
+  margin: 16px 0;
+  font-size: 1rem;
+}
+
 /* remove later */
 .doc span {
   font-size: 1rem;

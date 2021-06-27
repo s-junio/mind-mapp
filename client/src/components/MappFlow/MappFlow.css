@@ -47,6 +47,24 @@
   font-size: 1.5rem;
 }
 
+.input-node {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 12px;
+  width: 100%;
+  text-align: center;
+  font-family: "Oxygen";
+  padding: none;
+  margin: none;
+}
+
+.input-node:focus {
+  outline: none;
+
+}
+
 .custom-node:not(.zoomed-out)::before {
   content: attr(data-title);
   position: absolute;
@@ -98,6 +116,7 @@
   animation: balloon 0.2s ease-in forwards;
   opacity: 0;
   position: relative;
+  transition: filter .3s ease-in, font-size .2s ease;
 }
 
 .zoomed-out .rainbow-buttons .rainbow-button {
@@ -114,11 +133,65 @@
   animation-delay: 0.2s;
   top: -20px;
 }
-.rainbow-buttons .rainbow-button:nth-child(4) {
+.rainbow-buttons .rainbow-button:last-child {
   animation-delay: 0.3s;
 }
 
 
+.rainbow-buttons .rainbow-button:hover {
+  filter: brightness(1.2);
+  font-size: 1.2rem;
+}
+
+.header-buttons {
+  position: fixed;
+  left: 20px;
+  bottom: 0;
+  display: flex;
+  z-index: 10;
+}
+
+.header-buttons .button {
+  width: 100px;
+  background-color: var(--secondary);
+  height: 80px;
+  box-shadow: 1px -1px 8px 2px rgba(0, 0, 0, 0.4);
+  transform: translateY(30px);
+  transition: transform .3s ease;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  justify-content: center;
+  text-transform: uppercase;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-buttons .button span{
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all .3s ease;
+}
+
+.header-buttons .button svg{
+  color: var(--neutral2);
+  font-size: 2rem;
+}
+
+.header-buttons .button:hover {
+  transform: translateY(0);
+}
+
+.header-buttons .button:hover span{
+  opacity: 1;
+  transform: translateY(0);
+}
+.header-buttons div:first-child {
+  border-top-left-radius: 10px;
+}
+.header-buttons div:last-child {
+  border-top-right-radius: 10px;
+}
 @keyframes balloon {
   from {
     transform: scale(0.3);

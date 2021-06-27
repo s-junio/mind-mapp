@@ -1,20 +1,46 @@
-import { faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleLeft, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { EventHandler, useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import MButton from '../../components/MButton/MButton';
 import MInput, { Valid } from '../../components/MInput/MInput';
 import './LoginRegister.css';
-import axios from 'axios';
+import UserManager from '../../UserManager';
+import { UserInfoContext } from '../../UserInfoProvider';
 
-const Login = () => {
+const UserManagerInstance = UserManager.Instance;
+
+interface LoginRegisterProps {
+  dismissComponent: () => void;
+}
+
+const Login: React.FC<LoginRegisterProps> = (props) => {
   const [loading, setLoading] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [_, setUserInfo] = useContext(UserInfoContext);
 
   const handleLogin: React.MouseEventHandler = async (ev) => {
     ev.preventDefault();
-    const req = fetch('/projects');
-    console.log(req);
     setLoading(true);
+
+    try {
+      await UserManagerInstance.executeLogin(userName, password);
+      setLoading(false);
+      const userData = await UserManagerInstance.getUserInfo();
+      setUserInfo(userData);
+      props.dismissComponent();
+    } catch (error) {
+      alert(error);
+      setLoading(false);
+    }
+  };
+
+  const handleChangeUser = (ev: any) => {
+    setUserName(ev.target.value);
+  };
+  const handleChangePassword = (ev: any) => {
+    setPassword(ev.target.value);
   };
 
   const errorValidRequired: Valid = {
@@ -27,14 +53,24 @@ const Login = () => {
     }
     return true;
   };
+
   return (
     <form className="auth">
       <MInput
         name="Username"
         required={true}
+        value={userName}
+        onChange={handleChangeUser}
         validation={valueRequired}
+        autoFocus={true}
       ></MInput>
-      <MInput name="Password" type="password" required={true}></MInput>
+      <MInput
+        name="Password"
+        type="password"
+        required={true}
+        value={password}
+        onChange={handleChangePassword}
+      ></MInput>
       <MButton
         label="Login"
         loading={loading}
@@ -44,36 +80,106 @@ const Login = () => {
   );
 };
 
-const Register = () => {
+const Register: React.FC<LoginRegisterProps> = (props) => {
+  const [_, setUserInfo] = useContext(UserInfoContext);
+
   const [loading, setLoading] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confPassword, setConfPassword] = useState('');
+
+  const handleUserChange = (ev: any) => {
+    setUserName(ev.target.value);
+  };
+  const handleEmailChange = (ev: any) => {
+    setEmail(ev.target.value);
+  };
+  const handlePasswordChange = (ev: any) => {
+    setPassword(ev.target.value);
+  };
+  const handleConfPasswordChange = (ev: any) => {
+    setConfPassword(ev.target.value);
+  };
+
+  const handleRegister = async (ev: any) => {
+    ev.preventDefault();
+    setLoading(true);
+
+    if (password !== confPassword) {
+      alert('Passwords do not match');
+      setLoading(false);
+    } else {
+      try {
+        const userData = await UserManagerInstance.registerUser({
+          userName,
+          email,
+          password,
+        });
+        setUserInfo(userData);
+        props.dismissComponent();
+      } catch (error) {
+        alert(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
   return (
     <form className="auth">
-      <MInput name="Username" required={true}></MInput>
-      <MInput name="Email" type="email" required={true}></MInput>
-      <MInput name="Password" type="password"></MInput>
-      <MInput name="Confirm Password" type="password"></MInput>
+      <MInput
+        name="Username"
+        required={true}
+        value={userName}
+        onChange={handleUserChange}
+        autoFocus={true}
+      ></MInput>
+      <MInput
+        name="Email"
+        type="email"
+        value={email}
+        onChange={handleEmailChange}
+      ></MInput>
+      <MInput
+        name="Password"
+        type="password"
+        required={true}
+        value={password}
+        onChange={handlePasswordChange}
+      ></MInput>
+      <MInput
+        name="Confirm Password"
+        type="password"
+        required={true}
+        value={confPassword}
+        onChange={handleConfPasswordChange}
+      ></MInput>
       <MButton
         label="Register"
         loading={loading}
-        handleClick={(ev) => {
-          ev.preventDefault();
-          setLoading(true);
-        }}
+        handleClick={handleRegister}
       ></MButton>
     </form>
   );
 };
 
-const LoginRegister = () => {
-  const [isLogin, setIsLogin] = useState(false);
+const LoginRegister: React.FC<LoginRegisterProps> = (props) => {
+  const [isLogin, setIsLogin] = useState(true);
+  const dismissComponent = () => {
+    props.dismissComponent();
+  };
+
   return (
     <div className="login-register-wrapper">
       <div className="login-register">
+        <div className="close-window" onClick={dismissComponent}>
+          <FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
+        </div>
         <TransitionGroup>
           {isLogin && (
             <CSSTransition classNames="log-module" timeout={500}>
               <div>
-                <Login></Login>
+                <Login dismissComponent={dismissComponent}></Login>
                 <div className="register-message">
                   Don't have an account yet?{' '}
                   <span
@@ -98,7 +204,7 @@ const LoginRegister = () => {
                   }}
                   icon={faArrowCircleLeft}
                 ></FontAwesomeIcon>
-                <Register></Register>
+                <Register dismissComponent={dismissComponent}></Register>
               </div>
             </CSSTransition>
           )}

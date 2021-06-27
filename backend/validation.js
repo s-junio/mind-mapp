@@ -9,7 +9,7 @@ const registerValidation = (data) => {
     firstName: Joi.string(),
     lastName: Joi.string(),
   });
-  return schema.validate(data)
+  return schema.validate(data);
 };
 
 const loginValidation = (data) => {
@@ -17,8 +17,19 @@ const loginValidation = (data) => {
     userName: Joi.string().required(),
     password: Joi.string().required(),
   });
-  return schema.validate(data)
+  return schema.validate(data);
+};
+
+const updateValidation = (data) => {
+  const schema = Joi.object({
+    firstName: Joi.string(),
+    lastName: Joi.string(),
+    email: Joi.string().email(),
+    avatar: Joi.string().base64(),
+  });
+  return schema.validate(data);
 };
 
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
+module.exports.updateValidation = updateValidation;

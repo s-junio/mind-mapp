@@ -20,8 +20,7 @@ function Mapp() {
   const [isDocOpen, setIsDocOpen] = useState(false);
   const [isEditEnabled, setIsEditEnabled] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
-
-  let nameInput: HTMLDivElement | null;
+  const [projectTitle, setProjectTitle] = useState('Untitled');
 
   const onDialogAction = () => {
     setShowDialog(!showDialog);
@@ -31,20 +30,13 @@ function Mapp() {
   };
 
   const enableEdit = () => {
-    console.log(nameInput);
-    if (nameInput) {
-      nameInput.contentEditable = 'true';
-      nameInput.focus();
-      setIsEditEnabled(true);
-    }
+    setIsEditEnabled(true);
   };
 
-  const inputOutOfFocus = () => {
+  const inputOutOfFocus = (ev: any) => {
     setIsEditEnabled(false);
-    if (nameInput) {
-      nameInput.contentEditable = 'false';
-    }
     setIsFetching(true);
+    setProjectTitle(ev.target.value);
     setTimeout(() => {
       /* simulating service call  */
       setIsFetching(false);
@@ -59,16 +51,16 @@ function Mapp() {
     <div className="mapp">
       <div className={`mapp-header ${isFetching ? 'fetching' : ''}`}>
         <div className="title-input">
-          <div
-            className="input"
-            contentEditable={false}
-            onBlur={inputOutOfFocus}
-            ref={(input) => {
-              nameInput = input;
-            }}
-          >
-            Untitled
-          </div>
+          {isEditEnabled ? (
+            <input
+              className="input"
+              autoFocus={true}
+              defaultValue={projectTitle}
+              onBlur={inputOutOfFocus}
+            />
+          ) : (
+            <div className="input">{projectTitle}</div>
+          )}
           <div className="actions">
             {!isEditEnabled && !isFetching && (
               <>

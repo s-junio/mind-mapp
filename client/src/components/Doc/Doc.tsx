@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import './Doc.css';
-import { useStoreState } from 'react-flow-renderer';
+import { useStoreActions, useStoreState } from 'react-flow-renderer';
 import type { Node } from 'react-flow-renderer';
 
 type DocProps = {
@@ -8,6 +8,13 @@ type DocProps = {
 };
 
 const Item = (props: any) => {
+  const [edit, setEdit] = useState(false);
+  const setElements = useStoreActions((store: any) => store.setElements);
+  const [nodes, edges] = useStoreState((store: any) => [
+    store.nodes,
+    store.edges,
+  ]);
+
   let level = props.level || 1;
   const nextLevel = level + 1;
 
@@ -28,17 +35,37 @@ const Item = (props: any) => {
     }
   };
 
+  const handleEdit = () => {
+    setEdit(true);
+  };
+  const handleBlur = (ev: any) => {
+    const newData = [];
+    for (let i in nodes) {
+      const node = nodes[i];
+      if (node.id === props.id) {
+        node.data.text = ev.target.value;
+      }
+      newData.push(node);
+    }
+
+    setElements([...newData, ...edges]);
+    setEdit(false);
+  };
+
   return (
     <div id={`item-${props.id}`} className="item">
       <div className="section">{renderBasedOnLevel(level)}</div>
-      <p style={{ textAlign: 'justify' }}>
-        officia incididunt labore laborum in sunt deserunt sint aliqua irure. Do
-        laborum consequat id minim ad deserunt deserunt reprehenderit pariatur
-        proident aliqua est anim. Consectetur veniam laborum excepteur id
-        commodo dolore dolor Lorem nulla enim incididunt nisi voluptate. Nisi
-        proident labore in sint nostrud nostrud voluptate ut elit mollit do.
-        Eiusmod ea nostrud cupidatat nisi duis aliquip.
-      </p>
+      {!edit ? (
+        <p style={{ textAlign: 'justify' }} onDoubleClick={handleEdit}>
+          {props.text}
+        </p>
+      ) : (
+        <textarea
+          autoFocus={true}
+          onBlur={handleBlur}
+          defaultValue={props.text}
+        />
+      )}
       <div className="outline-helper">
         {props.children &&
           props.children.map((child: Node) => (
@@ -49,6 +76,7 @@ const Item = (props: any) => {
               headerType={child.data.headerType}
               children={child.data.children}
               level={nextLevel}
+              text={child.data.text}
             ></Item>
           ))}
       </div>
@@ -61,9 +89,9 @@ const Doc: React.FC<DocProps> = (props) => {
     if (prev.length !== next.length) return false;
     let areEqual = true;
     for (let i = 0; i < prev.length; i++) {
-      if (prev[i].data !== next[i].data) {
-        areEqual = false;
-        break;
+      if(prev[i].__rf.position.x === next[i].__rf.position.x || prev[i].__rf.position.y === next[i].__rf.position.y){
+          areEqual = false;
+          break;
       }
     }
     return areEqual;
@@ -164,6 +192,7 @@ const Doc: React.FC<DocProps> = (props) => {
               headerTitle={node.data.headerTitle}
               headerType={node.data.headerType}
               children={node.data.children}
+              text={node.data.text}
             ></Item>
           ))
         ) : (

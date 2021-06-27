@@ -13,7 +13,7 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   const project = new Project({
     title: req.body.title,
   });
@@ -26,11 +26,11 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/:id', getProject, (req, res) => {
+router.get('/:id', auth, getProject, (req, res) => {
   res.send(res.project);
 });
 
-router.delete('/:id', getProject, async (req, res) => {
+router.delete('/:id', auth, getProject, async (req, res) => {
   try {
     await res.project.remove();
     res.json({ message: 'Project deleted' });

@@ -10,63 +10,433 @@ import ReactFlow, {
   BackgroundVariant,
   ArrowHeadType,
   useStoreState,
-  removeElements,
+  useStoreActions,
 } from 'react-flow-renderer';
 import type { Node, NodeProps } from 'react-flow-renderer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faTrash,
   faEdit,
-  faArrowLeft,
   faArrowRight,
+  faArrowDown,
+  faFileWord,
+  faSave,
 } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
+
+const COLORS = [undefined, '#FC5130', '#57A773', '#694D75', '#4E4D5C'];
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-const RainbowButtons = () => (
-  <div className="rainbow-buttons">
-    <div className="rainbow-button">
-      <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
+interface RainbowButtonsProps {
+  nodeId: string;
+  onAddSameLevel: () => void;
+  onAddLevelBellow: () => void;
+  onRemove: () => void;
+  onEdit: () => void;
+  showAddRight?: boolean;
+}
+
+const RainbowButtons: React.FC<RainbowButtonsProps> = ({
+  onAddSameLevel,
+  onAddLevelBellow,
+  onRemove,
+  onEdit,
+  showAddRight,
+}) => {
+  return (
+    <div className="rainbow-buttons">
+      <div className="rainbow-button" onClick={onEdit} title="Edit">
+        <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
+      </div>
+      <div className="rainbow-button" onClick={onRemove} title="Remove">
+        <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+      </div>
+      <div
+        className="rainbow-button"
+        onClick={onAddSameLevel}
+        title="Add Bellow"
+      >
+        <FontAwesomeIcon icon={faArrowDown}></FontAwesomeIcon>
+      </div>
+      {showAddRight ? (
+        <div
+          className="rainbow-button"
+          onClick={onAddLevelBellow}
+          title="Add Right"
+        >
+          <FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon>
+        </div>
+      ) : null}
     </div>
-    <div className="rainbow-button">
-      <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
-    </div>
-    <div className="rainbow-button">
-      <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-    </div>
-    <div className="rainbow-button">
-      <FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon>
-    </div>
-  </div>
-);
-const CustomNodeComponent = ({ data, selected }: NodeProps) => {
+  );
+};
+
+const generateUniqueId = () => 'id' + new Date().getTime();
+
+const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
+  const setElements = useStoreActions((store: any) => store.setElements);
+  const [nodes, edges] = useStoreState((store: any) => [
+    store.nodes,
+    store.edges,
+  ]);
+
+  const onAddLevelBellow = () => {
+    const newId = generateUniqueId();
+
+    let pos: any = {
+      x: 0,
+      y: 0,
+    };
+
+    const newNodes = [];
+
+    for (let i in nodes) {
+      const node = nodes[i];
+      if (node.id === id) {
+        if (!node.data.children) {
+          node.data.children = [];
+        }
+        node.data.children.push(newId);
+        console.log(node);
+        pos.x = node.__rf.position.x + 200;
+        pos.y = node.__rf.position.y;
+      }
+      newNodes.push(node);
+    }
+
+    const newLvl: number = data.level + 1;
+
+    const newChild = {
+      id: newId,
+      type: 'special',
+      position: {
+        x: pos.x,
+        y: pos.y,
+      },
+      data: {
+        headerTitle: `${getHeaderType(data.level)} 1`,
+        level: newLvl,
+        index: 0,
+        children: [],
+        color: COLORS[newLvl],
+        parent: id,
+      },
+    };
+
+    newNodes.push(newChild);
+    edges.push({
+      id: `e${id}-${newId}`,
+      type: 'smoothstep',
+      source: id,
+      target: newId,
+      sourceHandle: 'c',
+      animated: true,
+      arrowHeadType: ArrowHeadType.ArrowClosed,
+    });
+
+    setElements([...newNodes, ...edges]);
+  };
+  const onEdit = () => {
+    setIsEditing(true);
+  };
+
+  const getChildrenIds: any = (children: any) => {
+    let childrenArray = [];
+    for (let j in children) {
+      const child = children[j];
+      const node = nodes.find((f: any) => f.id === child);
+      if (node) {
+        childrenArray.push(node.id);
+        if (node.data.children && node.data.children.length) {
+          childrenArray = [
+            ...childrenArray,
+            ...getChildrenIds(node.data.children),
+          ];
+        }
+      }
+    }
+    return childrenArray;
+  };
+  const onRemove = () => {
+    const childrenToRemove = getChildrenIds(data.children);
+
+    const test = [...nodes];
+    let replaceSource;
+    let replaceTarget;
+    const newElements = [];
+    //evaluate nodes
+    for (let i in test) {
+      const element = test[i];
+      if (element.id === data.parent) {
+        element.data.children = element.data.children.filter(
+          (c: any) => c !== id
+        );
+      }
+      /* if (element.data.children && element.data.children.length) {
+        element.data.children = element.data.children.filter(
+          (c: any) => c !== data.id
+        );
+      } */
+      if (
+        element.type === 'special' &&
+        element.data &&
+        element.data.level === data.level
+      ) {
+        if (element.data.index === data.index - 1) {
+          replaceSource = element.id;
+        } else if (element.data.index === data.index + 1) {
+          replaceTarget = element.id;
+        }
+        if (element.data.index !== data.index) {
+          newElements.push(element);
+        }
+        if (element.data.index > data.index) {
+          element.data.index -= 1;
+        }
+      } else if (childrenToRemove.indexOf(element.id) === -1) {
+        newElements.push(element);
+      }
+    }
+
+    const newEdges = [];
+    //evaluate edges
+    for (let i in edges) {
+      const edge = edges[i];
+      if (
+        edge.source !== replaceSource &&
+        edge.target !== replaceTarget &&
+        childrenToRemove.indexOf(edge.source) === -1 &&
+        childrenToRemove.indexOf(edge.target) === -1
+      ) {
+        newEdges.push(edge);
+      }
+    }
+    if (replaceSource && replaceTarget) {
+      newEdges.push({
+        id: `e${replaceSource}-${replaceTarget}`,
+        type: 'smoothstep',
+        source: replaceSource,
+        target: replaceTarget,
+        animated: true,
+        arrowHeadType: ArrowHeadType.ArrowClosed,
+      });
+    }
+    if (data.parent && data.index === 0) {
+      newEdges.push({
+        id: `e${data.parent}-${replaceTarget}`,
+        type: 'smoothstep',
+        source: data.parent,
+        target: replaceTarget,
+        sourceHandle: 'c',
+        animated: true,
+        arrowHeadType: ArrowHeadType.ArrowClosed,
+      });
+    }
+    setElements([...newElements, ...newEdges]);
+  };
+  const onAddSameLevel = () => {
+    const newElements = [];
+    const newIndex = data.index + 1;
+    const replaceCoords = {
+      x: xPos,
+      y: (yPos || 0) + 100,
+    };
+
+    let replaceColor = data.color;
+    const replaceSource = id;
+    let replaceTarget;
+
+    const test = [...nodes];
+
+    const newId = generateUniqueId();
+
+    //evaluate nodes
+    for (let i in test) {
+      const element = test[i];
+      if (data.parent && element.id === data.parent) {
+        element.data.children.push(newId);
+      }
+      if (
+        element.type === 'special' &&
+        element.data &&
+        element.data.level === data.level
+      ) {
+        if (element.data.index === newIndex) {
+          replaceTarget = element.id;
+          replaceCoords.x = element.__rf.position.x;
+          replaceCoords.y = element.__rf.position.y;
+          replaceColor = element.data.color;
+        }
+        if (element.data.index >= newIndex) {
+          element.data.index += 1;
+          element.position.y += 100;
+          element.__rf.position.y += 100;
+        }
+      }
+      newElements.push(element);
+    }
+
+    newElements.push({
+      id: newId,
+      type: 'special',
+      position: {
+        x: replaceCoords.x,
+        y: replaceCoords.y,
+      },
+      data: {
+        headerTitle: `${getHeaderType(data.level)} ${newIndex + 1}`,
+        level: data.level,
+        index: newIndex,
+        children: [],
+        color: replaceColor,
+      },
+    });
+
+    const newEdges = [];
+    //evaluate edges
+    for (let i in edges) {
+      const edge = edges[i];
+      if (edge.source !== replaceSource || edge.target !== replaceTarget) {
+        newEdges.push(edge);
+      }
+    }
+    if (replaceSource) {
+      newEdges.push({
+        id: `e${replaceSource}-${newId}`,
+        type: 'smoothstep',
+        source: replaceSource,
+        target: newId,
+        animated: true,
+        arrowHeadType: ArrowHeadType.ArrowClosed,
+      });
+    }
+    if (replaceTarget) {
+      newEdges.push({
+        id: `e${newId}-${replaceTarget}`,
+        type: 'smoothstep',
+        source: newId,
+        target: replaceTarget,
+        animated: true,
+        arrowHeadType: ArrowHeadType.ArrowClosed,
+      });
+    }
+
+    setElements([...newElements, ...newEdges]);
+  };
+
   const [, , zoom] = useStoreState((state: any) => state.transform);
   const showContent = zoom >= 0.6;
+
+  const getHeaderType = (level: number) => {
+    const HEADER_TYPES = ['Chapter', 'Section', 'Subsection', 'Subsubsection'];
+    if (level < HEADER_TYPES.length) {
+      return HEADER_TYPES[level];
+    }
+    return `Header${level + 1}`;
+  };
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const saveEdit = (ev: any) => {
+    const updated = nodes.map((node: any) => {
+      if (node.id === id) {
+        node.data.headerTitle = ev.target.value;
+      }
+      return node;
+    });
+    setElements([...updated, ...edges]);
+    setIsEditing(false);
+  };
   return (
     <div
       className={`custom-node react-flow__node-default ${
         showContent || 'zoomed-out'
       }`}
-      data-title={data.headerType}
+      data-title={`${getHeaderType(data.level)} ${data.index + 1}`}
       style={{ backgroundColor: data.color }}
     >
-      {selected && <RainbowButtons></RainbowButtons>}
-      <div>{showContent ? data.headerTitle : data.headerType}</div>
-      <Handle
-        type="target"
-        id="a"
-        position={Position.Left}
-        style={{ borderRadius: 0 }}
-      />
+      {selected && (
+        <RainbowButtons
+          nodeId={id}
+          onAddLevelBellow={onAddLevelBellow}
+          onEdit={onEdit}
+          onRemove={onRemove}
+          onAddSameLevel={onAddSameLevel}
+          showAddRight={data.children?.length ? false : true}
+        ></RainbowButtons>
+      )}
+      <div>
+        {isEditing ? (
+          <input
+            className="input-node"
+            type="text"
+            onBlur={saveEdit}
+            autoFocus={true}
+            defaultValue={data.headerTitle}
+          />
+        ) : (
+          <>
+            {showContent
+              ? data.headerTitle
+              : `${getHeaderType(data.level)} ${data.index + 1}`}
+          </>
+        )}
+      </div>
+      {data.index ? (
+        <Handle
+          type="target"
+          id="a"
+          position={Position.Top}
+          style={{ borderRadius: 0 /* display: 'none' */ }}
+        />
+      ) : null}
+
       <Handle
         type="source"
-        position={Position.Right}
+        position={Position.Bottom}
         id="b"
         style={{ borderRadius: '50%' }}
       />
+      {data.children?.length ? (
+        <Handle
+          type="source"
+          position={Position.Right}
+          id="c"
+          style={{ borderRadius: '50%' }}
+        />
+      ) : null}
+      {data.parent && !data.index ? (
+        <Handle
+          type="target"
+          position={Position.Left}
+          id="d"
+          style={{ borderRadius: 0 }}
+        />
+      ) : null}
+    </div>
+  );
+};
+
+const HeaderButtons = () => {
+  const handleSave = () => {
+
+  };
+  const handleExport = () => {
+
+  };
+  return (
+    <div className="header-buttons">
+      <div className="button" onClick={handleSave}>
+        <FontAwesomeIcon icon={faSave}></FontAwesomeIcon>
+        <span>Save</span>
+      </div>
+      <div className="button" onClick={handleExport}>
+        <FontAwesomeIcon icon={faFileWord}></FontAwesomeIcon>
+        <span>Export</span>
+      </div>
     </div>
   );
 };
@@ -74,7 +444,7 @@ const CustomNodeComponent = ({ data, selected }: NodeProps) => {
 function MappFlow() {
   const query = useQuery();
 
-  console.log(query.get("id")) // load data with this id
+  console.log(query.get('id')); // load data with this id
   /* Flow renderer */
   const initialElements = [
     {
@@ -83,31 +453,38 @@ function MappFlow() {
       position: { x: 10, y: 10 },
       data: {
         headerTitle: 'Introdução',
-        headerType: 'Chapter 1',
+        level: 0,
+        index: 0,
         children: ['11', '12', '13'],
+        text: 'Ora boas povo',
       },
     },
     {
       id: '2',
       type: 'special',
-      position: { x: 300, y: 10 },
-      data: { headerTitle: 'Estado da Arte', headerType: 'Chapter 2' },
+      position: { x: 10, y: 200 },
+      data: { headerTitle: 'Estado da arte', level: 0, index: 1 },
     },
     {
       id: '3',
       type: 'special',
-      position: { x: 600, y: 10 },
-      data: { headerTitle: 'Design e implementacao', headerType: 'Chapter 3' },
+      position: { x: 10, y: 400 },
+      data: {
+        headerTitle: 'Design e implementacao',
+        level: 0,
+        index: 2,
+      },
     },
     {
       id: '11',
       type: 'special',
-      position: { x: 10, y: 200 },
+      position: { x: 300, y: 10 },
       data: {
         headerTitle: 'Motivação',
-        headerType: 'Sub 1',
         color: '#FC5130',
         parent: '1',
+        level: 1,
+        index: 0,
       },
     },
     {
@@ -116,20 +493,22 @@ function MappFlow() {
       position: { x: 300, y: 200 },
       data: {
         headerTitle: 'Organização',
-        headerType: 'Sub 2',
         color: '#FC5130',
         parent: '1',
+        level: 1,
+        index: 1,
       },
     },
     {
       id: '13',
       type: 'special',
-      position: { x: 600, y: 200 },
+      position: { x: 300, y: 400 },
       data: {
         headerTitle: 'Objetivos',
-        headerType: 'Sub 3',
         color: '#FC5130',
         parent: '1',
+        level: 1,
+        index: 2,
       },
     },
     {
@@ -169,32 +548,36 @@ function MappFlow() {
       type: 'smoothstep',
       source: '1',
       target: '11',
+      sourceHandle: 'c',
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     },
   ];
+
+  initialElements.map((node) => {
+    if (node.type === 'special') {
+      if (node.data) {
+        /* node.data.onChange = 'tet' */
+      }
+    }
+  });
+
   const [elements, setElements] = useState(initialElements);
 
   const onLoad = (reactFlowInstance: any) => {
     reactFlowInstance.fitView();
   };
 
-  const onElementsRemove = (elementsToRemove: any) => {
-    const removeFunc: any = (els: any) => removeElements(elementsToRemove, els);
-    setElements(removeFunc);
-  };
-
-  /* const selectedNode = useStoreState((state:any) => state.selectedElements && state.selectedElements[0]); */
   return (
     <>
+      <HeaderButtons />
       <ReactFlow
-        snapToGrid={true}
-        snapGrid={[50, 50]}
+        /*      snapToGrid={true}
+        snapGrid={[50, 50]} */
         elements={elements}
         nodeTypes={{ special: CustomNodeComponent }}
+        selectNodesOnDrag={false}
         onLoad={onLoad}
-        onElementsRemove={onElementsRemove}
-        onNodeContextMenu={console.log}
       >
         <Controls showInteractive={false} />
         <Background

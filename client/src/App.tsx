@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import Loader from './components/Loader/Loader';
@@ -11,10 +11,12 @@ const Mapp = lazy(() => import('./views/Mapp/Mapp'));
 const Profile = lazy(() => import('./views/Profile/Profile'));
 
 function App() {
+
   let location = useLocation();
+  
+
   return (
     <div className="content">
-      <LoginRegister></LoginRegister>
       <Suspense fallback={<Loader></Loader>}>
         <TransitionGroup>
           <CSSTransition
