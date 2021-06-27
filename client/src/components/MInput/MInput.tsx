@@ -29,7 +29,6 @@ const MInput: React.FC<MInputProps> = (props) => {
 
   const getMessage = () => {
     if (typeof valid === 'object') {
-      console.log(valid);
       if (valid.message) {
         return valid.message;
       }

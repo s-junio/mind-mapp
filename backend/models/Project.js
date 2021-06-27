@@ -14,6 +14,18 @@ const projectDataSchema = new mongoose.Schema({
   data: {
     type: Object
   },
+  animated: {
+    type: Boolean
+  },
+  arrowHeadType: {
+    type: String
+  },
+  source: {
+    type: String
+  },
+  target: {
+    type: String
+  },
 });
 
 const projectSchema = new mongoose.Schema({

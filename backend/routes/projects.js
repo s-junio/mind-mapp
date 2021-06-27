@@ -49,7 +49,6 @@ router.get('/:id', auth, getProject, (req, res) => {
 });
 
 router.delete('/:id', auth, getProject, async (req, res) => {
-  console.log('calling!!!!!!!!1')
   try {
     User.findByIdAndUpdate(
       { _id: req.user._id },
@@ -63,6 +62,24 @@ router.delete('/:id', auth, getProject, async (req, res) => {
         }
       }
     );
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.patch('/:id', auth, getProject, async (req, res) => {
+  
+  console.log('Title:',req.body);
+  
+  try {
+    if(req.body.title){
+      res.project.title = req.body.title;
+    }
+    if(req.body.data){
+      res.project.data= req.body.data;
+    }
+    const saved = await res.project.save();
+    res.status(200).json({title: saved.title, _id: saved._id});
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

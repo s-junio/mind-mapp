@@ -30,7 +30,6 @@ const Snackbar: React.FC<SnackbarProps> = (props) => {
 
     if (props.messageInfo.autoDismiss !== false) {
       const time = props.messageInfo.timeout || 3500;
-      console.log(counter);
       const interval = window.setInterval(() => {
         setProgress(Math.min((210 * counter) / time, 1));
         counter += 1;

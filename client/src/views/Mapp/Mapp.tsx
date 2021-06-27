@@ -13,7 +13,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Snackbar from '../../components/Snackbar/Snackbar';
 import type { MessageInfo } from '../../components/Snackbar/Snackbar';
+import DataManager from '../../DataManager';
+import { useHistory } from 'react-router-dom';
 
+const DataManagerInstance = DataManager.Instance;
 
 function Mapp() {
   const [showDialog, setShowDialog] = useState(false);
@@ -24,10 +27,19 @@ function Mapp() {
   const [projectTitle, setProjectTitle] = useState('Untitled');
   const [projectId, setProjectId] = useState('');
 
-  const onDialogAction = () => {
+  const history = useHistory();
+
+
+  const enableDelete = () => {
     setShowDialog(!showDialog);
   };
-  const onDialongCancel = () => {
+
+  const onDialogAction = () => {
+    setShowDialog(!showDialog);
+    DataManagerInstance.removeProject(projectId);
+    history.push(`/mapp`);
+  };
+  const onDialogCancel = () => {
     setShowDialog(!showDialog);
   };
 
@@ -35,18 +47,24 @@ function Mapp() {
     setIsEditEnabled(true);
   };
 
-  const inputOutOfFocus = (ev: any) => {
+  const inputOutOfFocus = async (ev: any) => {
     setIsEditEnabled(false);
     setProjectTitle(ev.target.value);
 
     if (projectId) {
       setIsFetching(true);
-      setTimeout(() => {
-        /* TODO  */
-        setIsFetching(false);
+      try {
+        await DataManagerInstance.setProjectTitle(projectId, ev.target.value);
         setSnackInfo({ message: 'Project title changed.' });
-      }, 3000);
+      }
+      catch(err){
+        setSnackInfo({ message: err, severity: 'error' });
+      }
+      finally{
+      setIsFetching(false);
+      }
     } else {
+      // while the project has no ID just change the variable
     }
   };
 
@@ -73,7 +91,7 @@ function Mapp() {
                 <div onClick={enableEdit} className="action">
                   <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
                 </div>
-                <div onClick={onDialogAction} className="action">
+                <div onClick={enableDelete} className="action">
                   <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
                 </div>
               </>
@@ -85,6 +103,7 @@ function Mapp() {
         <ReactFlowProvider>
           <MappFlow
             projectTitle={projectTitle}
+            projectTitleSetter={setProjectTitle}
             fetcher={[isFetching, setIsFetching]}
             projectIdent={[projectId, setProjectId]}
           ></MappFlow>
@@ -108,7 +127,7 @@ function Mapp() {
       <Dialog
         show={showDialog}
         onAction={onDialogAction}
-        onCancel={onDialongCancel}
+        onCancel={onDialogCancel}
       >
         Are you sure you want to delete this project?
       </Dialog>

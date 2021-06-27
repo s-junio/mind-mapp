@@ -25,7 +25,7 @@ const updateValidation = (data) => {
     firstName: Joi.string(),
     lastName: Joi.string(),
     email: Joi.string().email(),
-    avatar: Joi.string().base64(),
+    avatar: Joi.string(),
   });
   return schema.validate(data);
 };

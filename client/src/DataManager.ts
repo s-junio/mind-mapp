@@ -1,36 +1,6 @@
 import UserManager from './UserManager';
 
 const UserManagerInstance = UserManager.Instance;
-const projectData = [
-  {
-    title: 'Project Plansssssssssssssssssssssssss',
-    id: 'ee-dd231',
-  },
-  {
-    title: 'A new idea',
-    id: 'ee-dd232',
-  },
-  {
-    title: 'TDD',
-    id: 'ee-dd233',
-  },
-  {
-    title: 'Reviews',
-    id: 'ee-dd234',
-  },
-  {
-    title: 'Planing',
-    id: 'ee-dd235',
-  },
-  {
-    title: 'Planing2',
-    id: 'ee-dd236',
-  },
-  {
-    title: 'Planing3',
-    id: 'ee-dd237',
-  },
-];
 
 interface Project {
   id: string;
@@ -42,7 +12,7 @@ class DataManager {
 
   private static _instance: DataManager;
   private static request = new Promise<IDBDatabase>((resolve, reject) => {
-    const _r = window.indexedDB.open('MyTestDatabase', 13);
+    const _r = window.indexedDB.open('TextMappDB', 13);
     _r.onsuccess = () => {
       resolve(_r.result);
     };
@@ -52,17 +22,15 @@ class DataManager {
     _r.onupgradeneeded = (ev: any) => {
       const db = ev.target.result;
       if (!db.objectStoreNames.contains(DataManager.PROJECTS)) {
-        const projectStore = db.createObjectStore(DataManager.PROJECTS, {
-          keyPath: 'id',
+        db.createObjectStore(DataManager.PROJECTS, {
+          keyPath: '_id',
           autoIncrement: true,
-        });
-
-        projectData.forEach(function (project: any) {
-          projectStore.add(project);
         });
       }
     };
   });
+
+  private generateKey = () => 'n-' + new Date().getTime();
 
   private constructor() {
     if (!window.indexedDB) {
@@ -70,68 +38,174 @@ class DataManager {
     }
   }
 
-  public async getProjects() {
-    const store = await this.getStore(DataManager.PROJECTS, 'readonly');
-    const req = store.getAll();
+  public async setProjectTitle(projectId: string, projectTitle: string) {
+    const payload = {
+      title: projectTitle,
+    };
 
-    // Database fetch
     const requestOptions = {
-      method: 'GET',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'auth-token': UserManagerInstance.getToken()!,
       },
+      body: JSON.stringify(payload),
     };
+
     return new Promise((resolve, reject) => {
-      fetch('/api/projects', requestOptions)
+      fetch('/api/projects/' + projectId, requestOptions)
         .then((data) => {
-          data.json().then((j) => resolve(j));
+          resolve(data);
+          /*  data.json().then((j) => resolve(j)); */
         })
         .catch((err) => {
-          err.text().then((t: any) => reject(t));
+          reject(err);
+          /* err.text().then((t: any) => reject(t)); */
         });
     });
+  }
 
-    /* return new Promise((resolve, reject) => {
-      req.onsuccess = () => {
-        resolve(req.result);
+  public async getProject(projectId: string) {
+    if (window.navigator.onLine && UserManagerInstance.isAuthenticated()) {
+      // Database fetch
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': UserManagerInstance.getToken()!,
+        },
       };
-      req.onerror = () => {
-        reject(req.error);
+      return new Promise((resolve, reject) => {
+        fetch('/api/projects/' + projectId, requestOptions)
+          .then((data) => {
+            data.json().then((j) => resolve(j));
+          })
+          .catch((err) => {
+            err.text().then((t: any) => reject(t));
+          });
+      });
+    } else {
+      const store = await this.getStore(DataManager.PROJECTS, 'readonly');
+      const req = store.get(projectId);
+      return new Promise((resolve, reject) => {
+        req.onsuccess = () => {
+          resolve(req.result);
+        };
+        req.onerror = () => {
+          reject(req.error);
+        };
+      });
+    }
+  }
+
+  public async getProjects() {
+    if (window.navigator.onLine && UserManagerInstance.isAuthenticated()) {
+      // Database fetch
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': UserManagerInstance.getToken()!,
+        },
       };
-    }); */
+      return new Promise((resolve, reject) => {
+        fetch('/api/projects', requestOptions)
+          .then((data) => {
+            data.json().then((j) => resolve(j));
+          })
+          .catch((err) => {
+            err.text().then((t: any) => reject(t));
+          });
+      });
+    } else {
+      const store = await this.getStore(DataManager.PROJECTS, 'readonly');
+      const req = store.getAll();
+      return new Promise((resolve, reject) => {
+        req.onsuccess = () => {
+          resolve(req.result);
+        };
+        req.onerror = () => {
+          reject(req.error);
+        };
+      });
+    }
   }
 
   public async saveProject(id: string, title: string, projectData: any) {
     //existing project
     if (id) {
-      alert('saving existing project');
+      const store = await this.getStore(DataManager.PROJECTS, 'readwrite');
+      try {
+        const req = store.put({ title, data: projectData }, id);
+      } catch (err) {
+        console.log(err);
+      }
+
+      if (window.navigator.onLine && UserManagerInstance.isAuthenticated()) {
+        const payload = {
+          data: projectData,
+          title: title,
+        };
+
+        const requestOptions = {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'auth-token': UserManagerInstance.getToken()!,
+          },
+          body: JSON.stringify(payload),
+        };
+        return new Promise((resolve, reject) => {
+          fetch('/api/projects/' + id, requestOptions)
+            .then((response) => {
+              response.json().then((j) => resolve(j));
+            })
+            .catch((err) => reject(err));
+        });
+      }
     }
     //new Project
     else {
-      const store = await this.getStore(DataManager.PROJECTS, 'readonly');
+      const store = await this.getStore(DataManager.PROJECTS, 'readwrite');
+      const req = store.add({
+        _id: this.generateKey(),
+        title,
+        data: projectData,
+        modified: new Date().toISOString(),
+      });
       //TODO save locally
 
-      const payload = {
-        title: title,
-        data: projectData,
-      };
+      if (UserManagerInstance.isAuthenticated()) {
+        const payload = {
+          title: title,
+          data: projectData,
+        };
 
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'auth-token': UserManagerInstance.getToken()!,
-        },
-        body: JSON.stringify(payload),
-      };
-      return new Promise((resolve, reject) => {
-        fetch('/api/projects', requestOptions)
-          .then((response) => {
-            response.json().then((j) => resolve(j));
-          })
-          .catch((err) => reject(err));
-      });
+        const requestOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'auth-token': UserManagerInstance.getToken()!,
+          },
+          body: JSON.stringify(payload),
+        };
+        return new Promise((resolve, reject) => {
+          fetch('/api/projects', requestOptions)
+            .then((response) => {
+              response.json().then((j) => resolve(j));
+            })
+            .catch((err) => reject(err));
+        });
+      } else {
+        return new Promise((resolve, reject) => {
+          req.onsuccess = () => {
+            resolve({ _id: req.result, title: title });
+          };
+          req.onerror = () => {
+            reject(req.error);
+          };
+        });
+      }
     }
   }
 
@@ -139,7 +213,7 @@ class DataManager {
     const store = await this.getStore(DataManager.PROJECTS, 'readwrite');
     const req = store.delete(id);
 
-    if (window.navigator.onLine) {
+    if (window.navigator.onLine && UserManagerInstance.isAuthenticated()) {
       // Database DEL
       const requestOptions = {
         method: 'DELETE',
@@ -152,8 +226,7 @@ class DataManager {
       if (res.status === 400) {
         const msg = await res.text();
         return Promise.reject(msg);
-      }
-      else {
+      } else {
         return Promise.resolve();
       }
     }

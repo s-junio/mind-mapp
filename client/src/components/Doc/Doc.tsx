@@ -123,7 +123,6 @@ const Doc: React.FC<DocProps> = (props) => {
         nodesParsed.push(getChildren(node.id));
       }
     }
-    console.log(nodesParsed);
     return nodesParsed;
   };
 

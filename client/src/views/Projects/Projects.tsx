@@ -26,7 +26,6 @@ function Projects() {
   useEffect(() => {
     const fetchData = async () => {
       const result: any = await DataInstance.getProjects();
-      console.log(result)
       setIsLoading(false);
       setList(result);
     };
@@ -54,7 +53,6 @@ function Projects() {
   const history = useHistory();
 
   const navigate = (id: string, coords: Coords) => {
-    console.log(coords);
     setAnimCoords(coords);
     setTimeout(() => {
       history.push(`/mapp?id=${id}`);

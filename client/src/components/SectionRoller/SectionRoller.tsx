@@ -29,7 +29,6 @@ const SectionRoller = () => {
       };
 
       const callback: IntersectionObserverCallback = (entries, observer) => {
-        console.log(isScrolling);
         if (!isScrolling) {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {

@@ -30,11 +30,12 @@ import {
   HeadingLevel,
   AlignmentType,
   LevelFormat,
-} from "docx";
-import DataManager from "../../DataManager";
-import { UserInfoContext } from "../../UserInfoProvider";
-import Snackbar from "../../components/Snackbar/Snackbar";
-import type { MessageInfo } from "../../components/Snackbar/Snackbar";
+} from 'docx';
+import DataManager from '../../DataManager';
+import { UserInfoContext } from '../../UserInfoProvider';
+import Snackbar from '../../components/Snackbar/Snackbar';
+import type { MessageInfo } from '../../components/Snackbar/Snackbar';
+import Loader from '../Loader/Loader';
 
 const DataManagerInstance = DataManager.Instance;
 
@@ -114,8 +115,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
           node.data.children = [];
         }
         node.data.children.push(newId);
-        console.log(node);
-        pos.x = node.__rf.position.x + 100;
+        pos.x = node.__rf.position.x + 200;
         pos.y = node.__rf.position.y;
       }
       newNodes.push(node);
@@ -523,7 +523,6 @@ const HeaderButtons = (props: any) => {
     };
 
     formattedDoc();
-    console.log(formatted);
     const doc = new Document({
       creator: userInfo.userName || "Test User",
       numbering: {
@@ -641,6 +640,7 @@ interface MappFlowProps {
   projectTitle: string;
   fetcher: any;
   projectIdent: any;
+  projectTitleSetter: any;
 }
 
 const MappFlow: React.FC<MappFlowProps> = (props) => {
@@ -649,7 +649,7 @@ const MappFlow: React.FC<MappFlowProps> = (props) => {
   const [projectId, setProjectId] = props.projectIdent;
 
   /* Flow renderer */
-  const initialElements = [
+  const initialElements: any = [
     {
       id: "1",
       type: "special",
@@ -757,22 +757,31 @@ const MappFlow: React.FC<MappFlowProps> = (props) => {
     },
   ];
 
-  initialElements.map((node) => {
-    if (node.type === "special") {
-      if (node.data) {
-        /* node.data.onChange = 'tet' */
-      }
-    }
-  });
-
-  const [elements, setElements] = useState(initialElements);
+  const [elements, setElements] = useState([]);
+  const [dataReady, setDataReady] = useState(false);
+  const setProjectTitle = props.projectTitleSetter;
 
   useEffect(() => {
-    setProjectId(query.get("id"));
-    DataManagerInstance.getProjects().then((data: any) => {
-      setElements(data);
-    });
-  }, [projectId, elements]);
+    const pId = query.get('id');
+    setProjectId(pId);
+    if (pId) {
+      setIsFetching(true);
+      DataManagerInstance.getProject(pId)
+        .then((response: any) => {
+          setElements(response.data);
+          setProjectTitle(response.title);
+          setIsFetching(false);
+          setDataReady(true);
+        })
+        .catch((err) => {
+          setIsFetching(false);
+        });
+    } else {
+      setElements(initialElements);
+      setProjectTitle('Untitled');
+      setDataReady(true);
+    }
+  }, []);
 
   const onLoad = (reactFlowInstance: any) => {
     reactFlowInstance.fitView();
@@ -785,34 +794,36 @@ const MappFlow: React.FC<MappFlowProps> = (props) => {
         fetcher={props.fetcher}
         projectIdent={[projectId, setProjectId]}
       />
-      <ReactFlow
-        /*      snapToGrid={true}
+      {dataReady ? (
+        <ReactFlow
+          /*      snapToGrid={true}
         snapGrid={[50, 50]} */
-        elements={elements}
-        nodeTypes={{ special: CustomNodeComponent }}
-        selectNodesOnDrag={false}
-        onLoad={onLoad}
-      >
-        <Controls showInteractive={false} />
-        <Background
-          color="#aaa"
-          gap={32}
-          size={0.1}
-          variant={BackgroundVariant.Lines}
-        />
-        <MiniMap
-          nodeStrokeColor={(n: any) => {
-            if (n.style?.background) return n.style.background;
-            if (n.type === "input") return "#0041d0";
-            if (n.type === "output") return "#ff0072";
-            if (n.type === "special") return "#1a192b";
+          elements={elements}
+          nodeTypes={{ special: CustomNodeComponent }}
+          selectNodesOnDrag={false}
+          onLoad={onLoad}
+        >
+          <Controls showInteractive={false} />
+          <Background
+            color="#aaa"
+            gap={32}
+            size={0.1}
+            variant={BackgroundVariant.Lines}
+          />
+          <MiniMap
+            nodeStrokeColor={(n: any) => {
+              if (n.style?.background) return n.style.background;
+              if (n.type === 'input') return '#0041d0';
+              if (n.type === 'output') return '#ff0072';
+              if (n.type === 'special') return '#1a192b';
 
-            return "#eee";
-          }}
-          nodeColor={(n: Node<any>) => n.data.color || "#fff"}
-          nodeBorderRadius={2}
-        />
-      </ReactFlow>
+              return '#eee';
+            }}
+            nodeColor={(n: Node<any>) => n.data.color || '#fff'}
+            nodeBorderRadius={2}
+          />
+        </ReactFlow>
+      ) : <Loader></Loader>}
     </>
   );
 };
