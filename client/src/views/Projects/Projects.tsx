@@ -1,28 +1,12 @@
 import React, { KeyboardEvent, useEffect, useState } from 'react';
 import ListData from '../../components/ListData/ListData';
 import MInput from '../../components/MInput/MInput';
-import { useHistory, Redirect } from 'react-router-dom';
-import UserManager from '../../UserManager';
+import { useHistory } from 'react-router-dom';
 
 import './Projects.css';
 import DataManager from '../../DataManager';
 
 const DataInstance = DataManager.Instance;
-const UserInstance = UserManager.Instance;
-
-/* remove later */
-const Http = new XMLHttpRequest();
-const url = 'http://localhost:3300/projects';
-Http.open('GET', url);
-Http.setRequestHeader(
-  'auth-token',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGMwZWI1Zjg2NTNkZDQ3NjQ3YTRhYzYiLCJpYXQiOjE2MjM2NzkxMzJ9.ngkCMc_WmQez5njxGDWCeLnyjsbuTkwHZLfcv40MKqQ'
-);
-Http.send();
-
-Http.onreadystatechange = (e) => {
-  console.log(Http.responseText);
-};
 
 interface Coords {
   x: number;
@@ -30,7 +14,7 @@ interface Coords {
 }
 
 interface Project {
-  id: string;
+  _id: string;
   title: string;
 }
 
@@ -39,19 +23,10 @@ function Projects() {
   const [list, setList] = useState<Project[]>([]);
   const [animCoords, setAnimCoords] = useState<Coords>({ x: 0, y: 0 });
 
-  /* todo remove this */
-  const sleep = (time: number) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, time * 1000);
-    });
-  };
-
   useEffect(() => {
     const fetchData = async () => {
-      await sleep(5);
       const result: any = await DataInstance.getProjects();
+      console.log(result)
       setIsLoading(false);
       setList(result);
     };
@@ -87,16 +62,16 @@ function Projects() {
   };
 
   const removeProject = async (id: string) => {
-    const result = await DataInstance.removeProject(id);
-    console.log(result);
-    setList(list.filter((item) => item.id !== id));
+    try {
+      const result = await DataInstance.removeProject(id);
+    }
+    catch(err){
+      console.log('Error:', err)
+    }
+    setList(list.filter((item) => item._id !== id));
     return Promise.resolve(true);
   };
   return (
-    <>
-      {!UserInstance.isAuthenticated() ? (
-        <Redirect to="/"></Redirect>
-      ) : (
         <div className="projects">
           <div className="project-list">
             <MInput name="Search..." onKeyUp={handleSearch}></MInput>
@@ -123,7 +98,7 @@ function Projects() {
             >
               <g
                 id="undraw_Modern_professional_re_3b6l 1"
-                clip-path="url(#clip0)"
+                clipPath="url(#clip0)"
               >
                 <path
                   id="Vector"
@@ -379,8 +354,6 @@ function Projects() {
           </div>
           <div className="paint"></div>
         </div>
-      )}
-    </>
   );
 }
 

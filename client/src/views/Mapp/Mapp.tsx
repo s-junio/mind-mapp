@@ -14,6 +14,7 @@ import {
 import Snackbar from '../../components/Snackbar/Snackbar';
 import type { MessageInfo } from '../../components/Snackbar/Snackbar';
 
+
 function Mapp() {
   const [showDialog, setShowDialog] = useState(false);
   const [snackInfo, setSnackInfo] = useState<MessageInfo | null>(null);
@@ -21,6 +22,7 @@ function Mapp() {
   const [isEditEnabled, setIsEditEnabled] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [projectTitle, setProjectTitle] = useState('Untitled');
+  const [projectId, setProjectId] = useState('');
 
   const onDialogAction = () => {
     setShowDialog(!showDialog);
@@ -35,13 +37,17 @@ function Mapp() {
 
   const inputOutOfFocus = (ev: any) => {
     setIsEditEnabled(false);
-    setIsFetching(true);
     setProjectTitle(ev.target.value);
-    setTimeout(() => {
-      /* simulating service call  */
-      setIsFetching(false);
-      setSnackInfo({ message: 'Saved!' });
-    }, 3000);
+
+    if (projectId) {
+      setIsFetching(true);
+      setTimeout(() => {
+        /* TODO  */
+        setIsFetching(false);
+        setSnackInfo({ message: 'Project title changed.' });
+      }, 3000);
+    } else {
+    }
   };
 
   const handleDismiss = () => {
@@ -77,7 +83,11 @@ function Mapp() {
       </div>
       <div className="mapp-content">
         <ReactFlowProvider>
-          <MappFlow></MappFlow>
+          <MappFlow
+            projectTitle={projectTitle}
+            fetcher={[isFetching, setIsFetching]}
+            projectIdent={[projectId, setProjectId]}
+          ></MappFlow>
           <div
             className="separator"
             onClick={() => setIsDocOpen(!isDocOpen)}

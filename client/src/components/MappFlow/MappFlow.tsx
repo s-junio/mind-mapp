@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import './MappFlow.css';
 import ReactFlow, {
@@ -23,6 +23,20 @@ import {
   faSave,
 } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
+import {
+  Document,
+  Packer,
+  Paragraph,
+  HeadingLevel,
+  AlignmentType,
+  LevelFormat,
+} from 'docx';
+import DataManager from '../../DataManager';
+import { UserInfoContext } from '../../UserInfoProvider';
+import Snackbar from '../../components/Snackbar/Snackbar';
+import type { MessageInfo } from '../../components/Snackbar/Snackbar';
+
+const DataManagerInstance = DataManager.Instance;
 
 const COLORS = [undefined, '#FC5130', '#57A773', '#694D75', '#4E4D5C'];
 
@@ -101,7 +115,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
         }
         node.data.children.push(newId);
         console.log(node);
-        pos.x = node.__rf.position.x + 200;
+        pos.x = node.__rf.position.x + 100;
         pos.y = node.__rf.position.y;
       }
       newNodes.push(node);
@@ -420,31 +434,218 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
   );
 };
 
-const HeaderButtons = () => {
-  const handleSave = () => {
+const HeaderButtons = (props: any) => {
+  const [userInfo] = useContext(UserInfoContext);
+  const [nodes, edges] = useStoreState((store: any) => [
+    store.nodes,
+    store.edges,
+  ]);
+  const [isFetching, setIsFetching] = props.fetcher;
+  const [snackInfo, setSnackInfo] = useState<MessageInfo | null>(null);
+  const [projectId, setProjectId] = props.projectIdent;
 
+  const getHeaderLevel = (level: number) => {
+    let headerLevel;
+    switch (level) {
+      case 0:
+        headerLevel = HeadingLevel.HEADING_1;
+        break;
+      case 1:
+        headerLevel = HeadingLevel.HEADING_2;
+        break;
+      case 2:
+        headerLevel = HeadingLevel.HEADING_3;
+        break;
+      case 3:
+        headerLevel = HeadingLevel.HEADING_4;
+        break;
+      case 4:
+        headerLevel = HeadingLevel.HEADING_5;
+        break;
+      case 5:
+        headerLevel = HeadingLevel.HEADING_6;
+        break;
+      default:
+        headerLevel = HeadingLevel.TITLE;
+        break;
+    }
+    return headerLevel;
+  };
+
+  const handleSave = async () => {
+    setIsFetching(true);
+    try {
+      const saved: any = await DataManagerInstance.saveProject(
+        projectId,
+        props.projectTitle,
+        [...nodes, ...edges]
+      );
+      setSnackInfo({ message: `Project '${saved.title}' created!` });
+      setProjectId(saved._id);
+    } catch (err) {
+      setSnackInfo({ message: err, severity: 'error' });
+    } finally {
+      setIsFetching(false);
+    }
   };
   const handleExport = () => {
+    const formatted: any = [];
+    setIsFetching(true);
+    const formattedDoc = (parent?: any) => {
+      for (let i in nodes) {
+        const node = nodes[i];
+        if (node.data.parent === parent) {
+          formatted.push(
+            new Paragraph({
+              text: node.data.headerTitle,
+              heading: getHeaderLevel(node.data.level),
+              spacing: {
+                after: 50,
+                before: 150,
+              },
+              alignment: AlignmentType.JUSTIFIED,
+              numbering: {
+                level: node.data.level,
+                reference: 'mapp-numbering',
+              },
+            })
+          );
+          if (node.data.text) {
+            formatted.push(new Paragraph(node.data.text));
+          }
+          if (node.data.children) {
+            formattedDoc(node.id);
+          }
+        }
+      }
+    };
 
+    formattedDoc();
+    console.log(formatted);
+    const doc = new Document({
+      creator: userInfo.userName || 'Test User',
+      numbering: {
+        config: [
+          {
+            reference: 'mapp-numbering',
+            levels: [
+              {
+                level: 0,
+                format: LevelFormat.DECIMAL,
+                text: '%1',
+                alignment: AlignmentType.START,
+                style: {
+                  paragraph: {
+                    indent: { left: 720, hanging: 260 },
+                  },
+                },
+              },
+              {
+                level: 1,
+                format: LevelFormat.DECIMAL,
+                text: '%1.%2.',
+                alignment: AlignmentType.START,
+                style: {
+                  paragraph: {
+                    indent: { left: 1440, hanging: 980 },
+                  },
+                },
+              },
+              {
+                level: 2,
+                format: LevelFormat.DECIMAL,
+                text: '%1.%2.%3.',
+                alignment: AlignmentType.START,
+                style: {
+                  paragraph: {
+                    indent: { left: 2160, hanging: 1700 },
+                  },
+                },
+              },
+              {
+                level: 3,
+                format: LevelFormat.DECIMAL,
+                text: '%1.%2.%3.%4,)',
+                alignment: AlignmentType.START,
+                style: {
+                  paragraph: {
+                    indent: { left: 2880, hanging: 2420 },
+                  },
+                },
+              },
+              {
+                level: 4,
+                format: LevelFormat.DECIMAL,
+                text: '%1.%2.%3.%4,)',
+                alignment: AlignmentType.START,
+                style: {
+                  paragraph: {
+                    indent: { left: 2880, hanging: 2420 },
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      sections: [
+        {
+          children: formatted,
+        },
+      ],
+    });
+
+    Packer.toBlob(doc).then((blob) => {
+      // saveAs from FileSaver will download the file
+      let a: any = document.createElement('a');
+      a.style = 'display: none';
+      document.body.appendChild(a);
+      const url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = props.projectTitle + '.docx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.parentNode?.removeChild(a);
+      setIsFetching(false);
+    });
+  };
+
+  const handleDismiss = () => {
+    setSnackInfo(null);
   };
   return (
-    <div className="header-buttons">
-      <div className="button" onClick={handleSave}>
-        <FontAwesomeIcon icon={faSave}></FontAwesomeIcon>
-        <span>Save</span>
+    <>
+      <div className={`header-buttons ${isFetching ? 'fetching' : ''}`}>
+        <div className="button" onClick={handleSave}>
+          <FontAwesomeIcon icon={faSave}></FontAwesomeIcon>
+          <span>Save</span>
+        </div>
+        <div className="button" onClick={handleExport}>
+          <FontAwesomeIcon icon={faFileWord}></FontAwesomeIcon>
+          <span>Export</span>
+        </div>
       </div>
-      <div className="button" onClick={handleExport}>
-        <FontAwesomeIcon icon={faFileWord}></FontAwesomeIcon>
-        <span>Export</span>
-      </div>
-    </div>
+      {snackInfo ? (
+        <Snackbar
+          handleDismiss={handleDismiss}
+          messageInfo={snackInfo}
+        ></Snackbar>
+      ) : null}
+    </>
   );
 };
 
-function MappFlow() {
-  const query = useQuery();
+interface MappFlowProps {
+  projectTitle: string;
+  fetcher: any;
+  projectIdent: any;
+}
 
-  console.log(query.get('id')); // load data with this id
+const MappFlow: React.FC<MappFlowProps> = (props) => {
+  const query = useQuery();
+  const [isFetching, setIsFetching] = props.fetcher;
+  const [projectId, setProjectId] = props.projectIdent;
+
   /* Flow renderer */
   const initialElements = [
     {
@@ -564,13 +765,25 @@ function MappFlow() {
 
   const [elements, setElements] = useState(initialElements);
 
+  
+  useEffect(() => {
+    setProjectId(query.get('id'));
+    DataManagerInstance.getProjects().then((data: any) => {
+      setElements(data);
+    });
+  }, [projectId, elements]);
+
   const onLoad = (reactFlowInstance: any) => {
     reactFlowInstance.fitView();
   };
 
   return (
     <>
-      <HeaderButtons />
+      <HeaderButtons
+        projectTitle={props.projectTitle}
+        fetcher={props.fetcher}
+        projectIdent={[projectId, setProjectId]}
+      />
       <ReactFlow
         /*      snapToGrid={true}
         snapGrid={[50, 50]} */
@@ -601,6 +814,6 @@ function MappFlow() {
       </ReactFlow>
     </>
   );
-}
+};
 
 export default MappFlow;

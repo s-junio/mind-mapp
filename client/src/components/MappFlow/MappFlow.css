@@ -171,6 +171,7 @@
   opacity: 0;
   transform: translateY(-10px);
   transition: all .3s ease;
+  user-select: none;
 }
 
 .header-buttons .button svg{
@@ -180,6 +181,11 @@
 
 .header-buttons .button:hover {
   transform: translateY(0);
+}
+
+.header-buttons.fetching .button{
+  filter: grayscale(5);
+  pointer-events: none;
 }
 
 .header-buttons .button:hover span{

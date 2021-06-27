@@ -1,9 +1,19 @@
 const mongoose = require('mongoose');
 
 const projectDataSchema = new mongoose.Schema({
-  coords: {
-    type: String
-  }
+  id: {
+    type: String,
+    required: true
+  },
+  type:{
+    type: String,
+  },
+  position: {
+    type: Object
+  },
+  data: {
+    type: Object
+  },
 });
 
 const projectSchema = new mongoose.Schema({

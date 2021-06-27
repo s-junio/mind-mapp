@@ -61,7 +61,7 @@ function NavDrawer(props: any) {
               {props.routes &&
                 props.routes.map((route: Route, index: number) => (
                   <>
-                    {!userInfo.userName && (route.path === '/profile' || route.path === '/projects') ? null : (
+                    {!userInfo.userName && (route.path === '/profile') ? null : (
                       <Link
                         key={route.path}
                         onClick={handleActionClick}

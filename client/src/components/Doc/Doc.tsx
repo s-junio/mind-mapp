@@ -132,30 +132,6 @@ const Doc: React.FC<DocProps> = (props) => {
     compareNodes
   );
 
-  const exportDoc = function () {
-    const docElem: any = elem.current;
-
-    if (docElem.innerHTML) {
-      const header =
-        "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-        "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-        "xmlns='http://www.w3.org/TR/REC-html40'>" +
-        "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
-      const footer = '</body></html>';
-      const sourceHTML = header + docElem.innerHTML + footer;
-      console.log(nodes);
-      const source =
-        'data:application/vnd.ms-word;charset=utf-8,' +
-        encodeURIComponent(sourceHTML);
-      const fileDownload = document.createElement('a');
-      document.body.appendChild(fileDownload);
-      fileDownload.href = source;
-      fileDownload.download = 'document.docx';
-      fileDownload.click();
-      document.body.removeChild(fileDownload);
-    }
-  };
-
   const selectedElements = useStoreState(
     (store: any) => store.selectedElements
   );
@@ -182,7 +158,6 @@ const Doc: React.FC<DocProps> = (props) => {
 
   return (
     <div className="doc" style={props.style} ref={elem}>
-      <button onClick={exportDoc}>Download</button>
       <div className="outline-helper">
         {nodes && nodes[0] ? (
           nodes.map((node: any) => (

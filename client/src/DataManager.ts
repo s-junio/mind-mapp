@@ -1,4 +1,4 @@
-import UserManager from "./UserManager";
+import UserManager from './UserManager';
 
 const UserManagerInstance = UserManager.Instance;
 const projectData = [
@@ -32,7 +32,6 @@ const projectData = [
   },
 ];
 
-
 interface Project {
   id: string;
   title: string;
@@ -61,7 +60,6 @@ class DataManager {
         projectData.forEach(function (project: any) {
           projectStore.add(project);
         });
-        console.log(projectStore);
       }
     };
   });
@@ -75,36 +73,91 @@ class DataManager {
   public async getProjects() {
     const store = await this.getStore(DataManager.PROJECTS, 'readonly');
     const req = store.getAll();
+
+    // Database fetch
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth-token': UserManagerInstance.getToken()!,
+      },
+    };
     return new Promise((resolve, reject) => {
+      fetch('/api/projects', requestOptions)
+        .then((data) => {
+          data.json().then((j) => resolve(j));
+        })
+        .catch((err) => {
+          err.text().then((t: any) => reject(t));
+        });
+    });
+
+    /* return new Promise((resolve, reject) => {
       req.onsuccess = () => {
         resolve(req.result);
       };
       req.onerror = () => {
         reject(req.error);
       };
-    });
+    }); */
   }
 
-  public async saveProject(projectData:any) {
-    const store = await this.getStore(DataManager.PROJECTS, 'readonly');
-    //TODO save locally
+  public async saveProject(id: string, title: string, projectData: any) {
+    //existing project
+    if (id) {
+      alert('saving existing project');
+    }
+    //new Project
+    else {
+      const store = await this.getStore(DataManager.PROJECTS, 'readonly');
+      //TODO save locally
 
-    const requestOptions = {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'auth-token': UserManagerInstance.getToken()!,
-      },
-      body: JSON.stringify(projectData),
-    };
-    
-    fetch('/api/projects', requestOptions)
-    .then((response) => {});
+      const payload = {
+        title: title,
+        data: projectData,
+      };
+
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': UserManagerInstance.getToken()!,
+        },
+        body: JSON.stringify(payload),
+      };
+      return new Promise((resolve, reject) => {
+        fetch('/api/projects', requestOptions)
+          .then((response) => {
+            response.json().then((j) => resolve(j));
+          })
+          .catch((err) => reject(err));
+      });
+    }
   }
 
   public async removeProject(id: string) {
     const store = await this.getStore(DataManager.PROJECTS, 'readwrite');
     const req = store.delete(id);
+
+    if (window.navigator.onLine) {
+      // Database DEL
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': UserManagerInstance.getToken()!,
+        },
+      };
+      const res = await fetch('/api/projects/' + id, requestOptions);
+      if (res.status === 400) {
+        const msg = await res.text();
+        return Promise.reject(msg);
+      }
+      else {
+        return Promise.resolve();
+      }
+    }
+
     return new Promise((resolve, reject) => {
       req.onsuccess = () => {
         resolve(req.result);
@@ -119,7 +172,7 @@ class DataManager {
     const store = await this.getStore(DataManager.PROJECTS, 'readonly');
     const req = store.openCursor();
     return new Promise((resolve, reject) => {
-      const list:Project[] = [];
+      const list: Project[] = [];
       req.onsuccess = () => {
         const cursor = req.result;
         if (!cursor) {
