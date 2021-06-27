@@ -194,7 +194,8 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
       if (
         element.type === 'special' &&
         element.data &&
-        element.data.level === data.level
+        element.data.level === data.level &&
+        element.data.parent === data.parent 
       ) {
         //get previous
         if (element.data.index === data.index - 1) {
@@ -251,7 +252,9 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
         arrowHeadType: ArrowHeadType.ArrowClosed,
       });
     }
-    setElements([...newElements, ...newEdges]);
+    if(newElements.length){
+      setElements([...newElements, ...newEdges]);
+    }
   };
   const onAddSameLevel = () => {
     const newElements = [];
@@ -278,12 +281,13 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
       if (
         element.type === 'special' &&
         element.data &&
-        element.data.level === data.level
+        element.data.level === data.level &&
+        element.data.parent === data.parent
       ) {
         if (element.data.index === newIndex) {
           replaceTarget = element.id;
-          replaceCoords.x = element.__rf.position.x;
-          replaceCoords.y = element.__rf.position.y;
+          replaceCoords.x = element.__rf.position.x ? element.__rf.position.x : element.__rf.position.x;
+          replaceCoords.y = element.__rf.position.y ? element.__rf.position.y : element.__rf.position.y;
           replaceColor = element.data.color;
         }
         if (element.data.index >= newIndex) {
@@ -308,6 +312,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
         index: newIndex,
         children: [],
         color: replaceColor,
+        parent: data.parent
       },
     });
 
