@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from "react";
 
-import './MappFlow.css';
+import "./MappFlow.css";
 import ReactFlow, {
   Handle,
   Position,
@@ -11,9 +11,9 @@ import ReactFlow, {
   ArrowHeadType,
   useStoreState,
   useStoreActions,
-} from 'react-flow-renderer';
-import type { Node, NodeProps } from 'react-flow-renderer';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+} from "react-flow-renderer";
+import type { Node, NodeProps } from "react-flow-renderer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTrash,
   faEdit,
@@ -21,8 +21,8 @@ import {
   faArrowDown,
   faFileWord,
   faSave,
-} from '@fortawesome/free-solid-svg-icons';
-import { useLocation } from 'react-router-dom';
+} from "@fortawesome/free-solid-svg-icons";
+import { useLocation } from "react-router-dom";
 import {
   Document,
   Packer,
@@ -30,15 +30,15 @@ import {
   HeadingLevel,
   AlignmentType,
   LevelFormat,
-} from 'docx';
-import DataManager from '../../DataManager';
-import { UserInfoContext } from '../../UserInfoProvider';
-import Snackbar from '../../components/Snackbar/Snackbar';
-import type { MessageInfo } from '../../components/Snackbar/Snackbar';
+} from "docx";
+import DataManager from "../../DataManager";
+import { UserInfoContext } from "../../UserInfoProvider";
+import Snackbar from "../../components/Snackbar/Snackbar";
+import type { MessageInfo } from "../../components/Snackbar/Snackbar";
 
 const DataManagerInstance = DataManager.Instance;
 
-const COLORS = [undefined, '#FC5130', '#57A773', '#694D75', '#4E4D5C'];
+const COLORS = [undefined, "#FC5130", "#57A773", "#694D75", "#4E4D5C"];
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -88,7 +88,7 @@ const RainbowButtons: React.FC<RainbowButtonsProps> = ({
   );
 };
 
-const generateUniqueId = () => 'id' + new Date().getTime();
+const generateUniqueId = () => "id" + new Date().getTime();
 
 const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
   const setElements = useStoreActions((store: any) => store.setElements);
@@ -125,7 +125,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
 
     const newChild = {
       id: newId,
-      type: 'special',
+      type: "special",
       position: {
         x: pos.x,
         y: pos.y,
@@ -143,10 +143,10 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
     newNodes.push(newChild);
     edges.push({
       id: `e${id}-${newId}`,
-      type: 'smoothstep',
+      type: "smoothstep",
       source: id,
       target: newId,
-      sourceHandle: 'c',
+      sourceHandle: "c",
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     });
@@ -195,7 +195,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
         );
       } */
       if (
-        element.type === 'special' &&
+        element.type === "special" &&
         element.data &&
         element.data.level === data.level
       ) {
@@ -231,7 +231,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
     if (replaceSource && replaceTarget) {
       newEdges.push({
         id: `e${replaceSource}-${replaceTarget}`,
-        type: 'smoothstep',
+        type: "smoothstep",
         source: replaceSource,
         target: replaceTarget,
         animated: true,
@@ -241,10 +241,10 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
     if (data.parent && data.index === 0) {
       newEdges.push({
         id: `e${data.parent}-${replaceTarget}`,
-        type: 'smoothstep',
+        type: "smoothstep",
         source: data.parent,
         target: replaceTarget,
-        sourceHandle: 'c',
+        sourceHandle: "c",
         animated: true,
         arrowHeadType: ArrowHeadType.ArrowClosed,
       });
@@ -274,7 +274,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
         element.data.children.push(newId);
       }
       if (
-        element.type === 'special' &&
+        element.type === "special" &&
         element.data &&
         element.data.level === data.level
       ) {
@@ -295,7 +295,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
 
     newElements.push({
       id: newId,
-      type: 'special',
+      type: "special",
       position: {
         x: replaceCoords.x,
         y: replaceCoords.y,
@@ -320,7 +320,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
     if (replaceSource) {
       newEdges.push({
         id: `e${replaceSource}-${newId}`,
-        type: 'smoothstep',
+        type: "smoothstep",
         source: replaceSource,
         target: newId,
         animated: true,
@@ -330,7 +330,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
     if (replaceTarget) {
       newEdges.push({
         id: `e${newId}-${replaceTarget}`,
-        type: 'smoothstep',
+        type: "smoothstep",
         source: newId,
         target: replaceTarget,
         animated: true,
@@ -345,7 +345,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
   const showContent = zoom >= 0.6;
 
   const getHeaderType = (level: number) => {
-    const HEADER_TYPES = ['Chapter', 'Section', 'Subsection', 'Subsubsection'];
+    const HEADER_TYPES = ["Chapter", "Section", "Subsection", "Subsubsection"];
     if (level < HEADER_TYPES.length) {
       return HEADER_TYPES[level];
     }
@@ -367,7 +367,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
   return (
     <div
       className={`custom-node react-flow__node-default ${
-        showContent || 'zoomed-out'
+        showContent || "zoomed-out"
       }`}
       data-title={`${getHeaderType(data.level)} ${data.index + 1}`}
       style={{ backgroundColor: data.color }}
@@ -412,14 +412,14 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
         type="source"
         position={Position.Bottom}
         id="b"
-        style={{ borderRadius: '50%' }}
+        style={{ borderRadius: "50%" }}
       />
       {data.children?.length ? (
         <Handle
           type="source"
           position={Position.Right}
           id="c"
-          style={{ borderRadius: '50%' }}
+          style={{ borderRadius: "50%" }}
         />
       ) : null}
       {data.parent && !data.index ? (
@@ -483,7 +483,7 @@ const HeaderButtons = (props: any) => {
       setSnackInfo({ message: `Project '${saved.title}' created!` });
       setProjectId(saved._id);
     } catch (err) {
-      setSnackInfo({ message: err, severity: 'error' });
+      setSnackInfo({ message: err, severity: "error" });
     } finally {
       setIsFetching(false);
     }
@@ -506,12 +506,14 @@ const HeaderButtons = (props: any) => {
               alignment: AlignmentType.JUSTIFIED,
               numbering: {
                 level: node.data.level,
-                reference: 'mapp-numbering',
+                reference: "mapp-numbering",
               },
             })
           );
           if (node.data.text) {
-            formatted.push(new Paragraph(node.data.text));
+            formatted.push(
+              new Paragraph({ text: node.data.text, indent: {left:200}, })
+            );
           }
           if (node.data.children) {
             formattedDoc(node.id);
@@ -523,64 +525,64 @@ const HeaderButtons = (props: any) => {
     formattedDoc();
     console.log(formatted);
     const doc = new Document({
-      creator: userInfo.userName || 'Test User',
+      creator: userInfo.userName || "Test User",
       numbering: {
         config: [
           {
-            reference: 'mapp-numbering',
+            reference: "mapp-numbering",
             levels: [
               {
                 level: 0,
                 format: LevelFormat.DECIMAL,
-                text: '%1',
+                text: "%1",
                 alignment: AlignmentType.START,
                 style: {
                   paragraph: {
-                    indent: { left: 720, hanging: 260 },
+                    indent: { left: 100 },
                   },
                 },
               },
               {
                 level: 1,
                 format: LevelFormat.DECIMAL,
-                text: '%1.%2.',
+                text: "%1.%2.",
                 alignment: AlignmentType.START,
                 style: {
                   paragraph: {
-                    indent: { left: 1440, hanging: 980 },
+                    indent: { left: 200 },
                   },
                 },
               },
               {
                 level: 2,
                 format: LevelFormat.DECIMAL,
-                text: '%1.%2.%3.',
+                text: "%1.%2.%3.",
                 alignment: AlignmentType.START,
                 style: {
                   paragraph: {
-                    indent: { left: 2160, hanging: 1700 },
+                    indent: { left: 1500 },
                   },
                 },
               },
               {
                 level: 3,
                 format: LevelFormat.DECIMAL,
-                text: '%1.%2.%3.%4,)',
+                text: "%1.%2.%3.%4.",
                 alignment: AlignmentType.START,
                 style: {
                   paragraph: {
-                    indent: { left: 2880, hanging: 2420 },
+                    indent: { left: 2000, hanging:50 },
                   },
                 },
               },
               {
                 level: 4,
                 format: LevelFormat.DECIMAL,
-                text: '%1.%2.%3.%4,)',
+                text: "%1.%2.%3.%4.%5",
                 alignment: AlignmentType.START,
                 style: {
                   paragraph: {
-                    indent: { left: 2880, hanging: 2420 },
+                    indent: { left: 1900},
                   },
                 },
               },
@@ -597,12 +599,12 @@ const HeaderButtons = (props: any) => {
 
     Packer.toBlob(doc).then((blob) => {
       // saveAs from FileSaver will download the file
-      let a: any = document.createElement('a');
-      a.style = 'display: none';
+      let a: any = document.createElement("a");
+      a.style = "display: none";
       document.body.appendChild(a);
       const url = window.URL.createObjectURL(blob);
       a.href = url;
-      a.download = props.projectTitle + '.docx';
+      a.download = props.projectTitle + ".docx";
       a.click();
       window.URL.revokeObjectURL(url);
       a.parentNode?.removeChild(a);
@@ -615,7 +617,7 @@ const HeaderButtons = (props: any) => {
   };
   return (
     <>
-      <div className={`header-buttons ${isFetching ? 'fetching' : ''}`}>
+      <div className={`header-buttons ${isFetching ? "fetching" : ""}`}>
         <div className="button" onClick={handleSave}>
           <FontAwesomeIcon icon={faSave}></FontAwesomeIcon>
           <span>Save</span>
@@ -649,114 +651,114 @@ const MappFlow: React.FC<MappFlowProps> = (props) => {
   /* Flow renderer */
   const initialElements = [
     {
-      id: '1',
-      type: 'special',
+      id: "1",
+      type: "special",
       position: { x: 10, y: 10 },
       data: {
-        headerTitle: 'Introdução',
+        headerTitle: "Introdução",
         level: 0,
         index: 0,
-        children: ['11', '12', '13'],
-        text: 'Ora boas povo',
+        children: ["11", "12", "13"],
+        text: "Ora boas povo",
       },
     },
     {
-      id: '2',
-      type: 'special',
+      id: "2",
+      type: "special",
       position: { x: 10, y: 200 },
-      data: { headerTitle: 'Estado da arte', level: 0, index: 1 },
+      data: { headerTitle: "Estado da arte", level: 0, index: 1 },
     },
     {
-      id: '3',
-      type: 'special',
+      id: "3",
+      type: "special",
       position: { x: 10, y: 400 },
       data: {
-        headerTitle: 'Design e implementacao',
+        headerTitle: "Design e implementacao",
         level: 0,
         index: 2,
       },
     },
     {
-      id: '11',
-      type: 'special',
+      id: "11",
+      type: "special",
       position: { x: 300, y: 10 },
       data: {
-        headerTitle: 'Motivação',
-        color: '#FC5130',
-        parent: '1',
+        headerTitle: "Motivação",
+        color: "#FC5130",
+        parent: "1",
         level: 1,
         index: 0,
       },
     },
     {
-      id: '12',
-      type: 'special',
+      id: "12",
+      type: "special",
       position: { x: 300, y: 200 },
       data: {
-        headerTitle: 'Organização',
-        color: '#FC5130',
-        parent: '1',
+        headerTitle: "Organização",
+        color: "#FC5130",
+        parent: "1",
         level: 1,
         index: 1,
       },
     },
     {
-      id: '13',
-      type: 'special',
+      id: "13",
+      type: "special",
       position: { x: 300, y: 400 },
       data: {
-        headerTitle: 'Objetivos',
-        color: '#FC5130',
-        parent: '1',
+        headerTitle: "Objetivos",
+        color: "#FC5130",
+        parent: "1",
         level: 1,
         index: 2,
       },
     },
     {
-      id: 'e1-2',
-      type: 'smoothstep',
-      source: '1',
-      target: '2',
+      id: "e1-2",
+      type: "smoothstep",
+      source: "1",
+      target: "2",
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     },
     {
-      id: 'e2-3',
-      type: 'smoothstep',
-      source: '2',
-      target: '3',
+      id: "e2-3",
+      type: "smoothstep",
+      source: "2",
+      target: "3",
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     },
     {
-      id: 'e11-12',
-      type: 'smoothstep',
-      source: '11',
-      target: '12',
+      id: "e11-12",
+      type: "smoothstep",
+      source: "11",
+      target: "12",
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     },
     {
-      id: 'e12-13',
-      type: 'smoothstep',
-      source: '12',
-      target: '13',
+      id: "e12-13",
+      type: "smoothstep",
+      source: "12",
+      target: "13",
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     },
     {
-      id: 'e1-e11',
-      type: 'smoothstep',
-      source: '1',
-      target: '11',
-      sourceHandle: 'c',
+      id: "e1-e11",
+      type: "smoothstep",
+      source: "1",
+      target: "11",
+      sourceHandle: "c",
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     },
   ];
 
   initialElements.map((node) => {
-    if (node.type === 'special') {
+    if (node.type === "special") {
       if (node.data) {
         /* node.data.onChange = 'tet' */
       }
@@ -765,9 +767,8 @@ const MappFlow: React.FC<MappFlowProps> = (props) => {
 
   const [elements, setElements] = useState(initialElements);
 
-  
   useEffect(() => {
-    setProjectId(query.get('id'));
+    setProjectId(query.get("id"));
     DataManagerInstance.getProjects().then((data: any) => {
       setElements(data);
     });
@@ -802,13 +803,13 @@ const MappFlow: React.FC<MappFlowProps> = (props) => {
         <MiniMap
           nodeStrokeColor={(n: any) => {
             if (n.style?.background) return n.style.background;
-            if (n.type === 'input') return '#0041d0';
-            if (n.type === 'output') return '#ff0072';
-            if (n.type === 'special') return '#1a192b';
+            if (n.type === "input") return "#0041d0";
+            if (n.type === "output") return "#ff0072";
+            if (n.type === "special") return "#1a192b";
 
-            return '#eee';
+            return "#eee";
           }}
-          nodeColor={(n: Node<any>) => n.data.color || '#fff'}
+          nodeColor={(n: Node<any>) => n.data.color || "#fff"}
           nodeBorderRadius={2}
         />
       </ReactFlow>
