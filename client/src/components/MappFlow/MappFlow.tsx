@@ -147,6 +147,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
       source: id,
       target: newId,
       sourceHandle: 'c',
+      targetHandle: 'd',
       animated: true,
       arrowHeadType: ArrowHeadType.ArrowClosed,
     });
@@ -477,11 +478,16 @@ const HeaderButtons = (props: any) => {
 
   const handleSave = async () => {
     setIsFetching(true);
+    const accuratePositions = [...nodes].map((node => {
+      node.position.x = node.__rf.position.x;
+      node.position.y = node.__rf.position.y;
+      return node;
+    }))
     try {
       const saved: any = await DataManagerInstance.saveProject(
         projectId,
         props.projectTitle,
-        [...nodes, ...edges]
+        [...accuratePositions, ...edges]
       );
       setSnackInfo({ message: `Project '${saved.title}' created!` });
       setProjectId(saved._id);
