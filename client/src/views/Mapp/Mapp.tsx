@@ -29,7 +29,6 @@ function Mapp() {
 
   const history = useHistory();
 
-
   const enableDelete = () => {
     setShowDialog(!showDialog);
   };
@@ -56,12 +55,10 @@ function Mapp() {
       try {
         await DataManagerInstance.setProjectTitle(projectId, ev.target.value);
         setSnackInfo({ message: 'Project title changed.' });
-      }
-      catch(err){
+      } catch (err) {
         setSnackInfo({ message: err, severity: 'error' });
-      }
-      finally{
-      setIsFetching(false);
+      } finally {
+        setIsFetching(false);
       }
     } else {
       // while the project has no ID just change the variable
@@ -91,9 +88,11 @@ function Mapp() {
                 <div onClick={enableEdit} className="action">
                   <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
                 </div>
-                <div onClick={enableDelete} className="action">
-                  <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                </div>
+                {projectId ? (
+                  <div onClick={enableDelete} className="action">
+                    <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                  </div>
+                ) : null}
               </>
             )}
           </div>

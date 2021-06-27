@@ -1,19 +1,29 @@
-import React, { Suspense, lazy, useState } from 'react';
+import React, { Suspense, lazy, useContext, useEffect } from 'react';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import Loader from './components/Loader/Loader';
 import { Switch, Route, useLocation } from 'react-router-dom';
-import LoginRegister from './views/LoginRegister/LoginRegister';
+import UserManager from './UserManager';
+import { UserInfoContext } from './UserInfoProvider';
 
 const Home = lazy(() => import('./views/Home/Home'));
 const Projects = lazy(() => import('./views/Projects/Projects'));
 const Mapp = lazy(() => import('./views/Mapp/Mapp'));
 const Profile = lazy(() => import('./views/Profile/Profile'));
 
-function App() {
+const UserManagerInstance = UserManager.Instance;
 
+function App() {
   let location = useLocation();
-  
+  const [_, setUserInfo] = useContext(UserInfoContext);
+
+  useEffect(() => {
+    if (UserManagerInstance.isAuthenticated()) {
+      UserManagerInstance.getUserInfo().then((userData) => {
+        setUserInfo(userData);
+      });
+    }
+  });
 
   return (
     <div className="content">

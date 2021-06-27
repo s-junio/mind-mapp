@@ -210,8 +210,8 @@ class DataManager {
   }
 
   public async removeProject(id: string) {
-    const store = await this.getStore(DataManager.PROJECTS, 'readwrite');
-    const req = store.delete(id);
+
+   
 
     if (window.navigator.onLine && UserManagerInstance.isAuthenticated()) {
       // Database DEL
@@ -231,14 +231,20 @@ class DataManager {
       }
     }
 
-    return new Promise((resolve, reject) => {
-      req.onsuccess = () => {
-        resolve(req.result);
-      };
-      req.onerror = () => {
-        reject(req.error);
-      };
-    });
+    try {
+      const store = await this.getStore(DataManager.PROJECTS, 'readwrite');
+      const req = store.delete(id);
+      return new Promise((resolve, reject) => {
+        req.onsuccess = () => {
+          resolve(req.result);
+        };
+      });
+    }
+    catch(err){
+      console.log(err)
+    }
+
+   
   }
 
   public async filterProjects(term: string) {
