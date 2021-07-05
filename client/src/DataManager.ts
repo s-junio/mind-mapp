@@ -78,7 +78,7 @@ class DataManager {
       return new Promise((resolve, reject) => {
         fetch('/api/projects/' + projectId, requestOptions)
           .then((data) => {
-            data.json().then((j) => resolve(j));
+            data.json().then((j) => {resolve(j)});
           })
           .catch((err) => {
             err.text().then((t: any) => reject(t));

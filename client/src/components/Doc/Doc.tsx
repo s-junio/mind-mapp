@@ -112,7 +112,7 @@ const Doc: React.FC<DocProps> = (props) => {
       } else {
         obj = nodeObj[child];
       }
-      if (obj.data.children) {
+      if (obj && obj.data.children && obj.data.children.length) {
         obj.data.children = obj.data.children.map(getChildren);
       }
       return obj;

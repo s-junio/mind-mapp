@@ -17,13 +17,13 @@ function App() {
   let location = useLocation();
   const [_, setUserInfo] = useContext(UserInfoContext);
 
-  useEffect(() => {
-    if (UserManagerInstance.isAuthenticated()) {
+/*   useEffect(() => {
+    if (UserManagerInstance.isAuthenticated() &&) {
       UserManagerInstance.getUserInfo().then((userData) => {
         setUserInfo(userData);
       });
     }
-  });
+  }); */
 
   return (
     <div className="content">

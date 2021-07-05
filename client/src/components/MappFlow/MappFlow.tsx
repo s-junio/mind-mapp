@@ -131,7 +131,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
         y: pos.y,
       },
       data: {
-        headerTitle: `${getHeaderType(data.level)} 1`,
+        headerTitle: `*Title*`,
         level: newLvl,
         index: 0,
         children: [],
@@ -308,7 +308,7 @@ const CustomNodeComponent = ({ id, data, selected, xPos, yPos }: NodeProps) => {
         y: replaceCoords.y,
       },
       data: {
-        headerTitle: `${getHeaderType(data.level)} ${newIndex + 1}`,
+        headerTitle: `*Title*`,
         level: data.level,
         index: newIndex,
         children: [],
@@ -489,7 +489,7 @@ const HeaderButtons = (props: any) => {
         props.projectTitle,
         [...accuratePositions, ...edges]
       );
-      setSnackInfo({ message: `Project '${saved.title}' created!` });
+      setSnackInfo({ message: `Project '${saved.title}' saved!` });
       setProjectId(saved._id);
     } catch (err) {
       setSnackInfo({ message: err, severity: 'error' });
@@ -658,113 +658,21 @@ const MappFlow: React.FC<MappFlowProps> = (props) => {
   const [projectId, setProjectId] = props.projectIdent;
 
   /* Flow renderer */
-  const initialElements: any = [
-    {
-      id: '1',
-      type: 'special',
-      position: { x: 10, y: 10 },
-      data: {
-        headerTitle: 'Introdução',
-        level: 0,
-        index: 0,
-        children: ['11', '12', '13'],
-        text: 'Ora boas povo',
-      },
+  const initialElements: any = [{
+    "id": "1",
+    "type": "special",
+    "position": {
+        "x": 10,
+        "y": 10
     },
-    {
-      id: '2',
-      type: 'special',
-      position: { x: 10, y: 200 },
-      data: { headerTitle: 'Estado da arte', level: 0, index: 1 },
-    },
-    {
-      id: '3',
-      type: 'special',
-      position: { x: 10, y: 400 },
-      data: {
-        headerTitle: 'Design e implementacao',
-        level: 0,
-        index: 2,
-      },
-    },
-    {
-      id: '11',
-      type: 'special',
-      position: { x: 300, y: 10 },
-      data: {
-        headerTitle: 'Motivação',
-        color: '#FC5130',
-        parent: '1',
-        level: 1,
-        index: 0,
-      },
-    },
-    {
-      id: '12',
-      type: 'special',
-      position: { x: 300, y: 200 },
-      data: {
-        headerTitle: 'Organização',
-        color: '#FC5130',
-        parent: '1',
-        level: 1,
-        index: 1,
-      },
-    },
-    {
-      id: '13',
-      type: 'special',
-      position: { x: 300, y: 400 },
-      data: {
-        headerTitle: 'Objetivos',
-        color: '#FC5130',
-        parent: '1',
-        level: 1,
-        index: 2,
-      },
-    },
-    {
-      id: 'e1-2',
-      type: 'smoothstep',
-      source: '1',
-      target: '2',
-      animated: true,
-      arrowHeadType: ArrowHeadType.ArrowClosed,
-    },
-    {
-      id: 'e2-3',
-      type: 'smoothstep',
-      source: '2',
-      target: '3',
-      animated: true,
-      arrowHeadType: ArrowHeadType.ArrowClosed,
-    },
-    {
-      id: 'e11-12',
-      type: 'smoothstep',
-      source: '11',
-      target: '12',
-      animated: true,
-      arrowHeadType: ArrowHeadType.ArrowClosed,
-    },
-    {
-      id: 'e12-13',
-      type: 'smoothstep',
-      source: '12',
-      target: '13',
-      animated: true,
-      arrowHeadType: ArrowHeadType.ArrowClosed,
-    },
-    {
-      id: 'e1-e11',
-      type: 'smoothstep',
-      source: '1',
-      target: '11',
-      sourceHandle: 'c',
-      animated: true,
-      arrowHeadType: ArrowHeadType.ArrowClosed,
-    },
-  ];
+    "data": {
+        "headerTitle": "*Start Here*",
+        "level": 0,
+        "index": 0,
+        "children": [],
+        "text": "*Sample Text*"
+    }
+},];
 
   const [elements, setElements] = useState([]);
   const [dataReady, setDataReady] = useState(false);

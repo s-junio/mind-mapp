@@ -178,7 +178,7 @@
 }
 
 .log-button:hover::before {
-  transform: translate(-50%, -50%) scale(3);
+  transform: translate(-50%, -50%) scale(3.2);
 }
 
 .log-button.out {
