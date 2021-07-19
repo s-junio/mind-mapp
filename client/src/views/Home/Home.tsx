@@ -2,10 +2,6 @@ import React from 'react';
 import './Home.css';
 import MButton from '../../components/MButton/MButton';
 import { useHistory } from 'react-router-dom';
-import Card from '../../components/Card/Card';
-import SergioPic from '../../assets/profile_nobg.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 function Home() {
   const history = useHistory();

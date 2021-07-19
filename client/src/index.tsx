@@ -6,12 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import StartApp from './StartApp';
-
+import TMapRenderer from './components/TMap/TMapRenderer';
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-        <StartApp />
+      {/*   <StartApp /> */}
+      <TMapRenderer />
     </Router>
   </React.StrictMode>,
   document.getElementById('root')

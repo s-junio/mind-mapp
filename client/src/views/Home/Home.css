@@ -52,12 +52,6 @@ header h2::after {
   bottom: 5px;
 }
 
-.footer {
-  width: 100%;
-  height: 90px;
-  background-color: var(--primary);
-  color: var(--neutral2);
-}
 
 .cards {
   display: flex;

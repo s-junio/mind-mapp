@@ -1,0 +1,19 @@
+.edge {
+  stroke: #c9c9c9;
+  stroke-width: 1;
+  fill: none;
+  -webkit-animation: none;
+  animation: none;
+}
+
+.animated .edge {
+  stroke-dasharray: 5;
+  -webkit-animation: dashdraw 0.5s linear infinite;
+  animation: dashdraw 0.5s linear infinite;
+}
+
+@keyframes dashdraw {
+  0% {
+    stroke-dashoffset: 10;
+  }
+}

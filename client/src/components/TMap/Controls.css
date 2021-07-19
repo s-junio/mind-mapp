@@ -1,0 +1,101 @@
+.controls-wrapper {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px rgba(85, 85, 85, 0.2);
+  background-color: white;
+  color: white;
+}
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.control-drawer {
+  width: 100%;
+  height: 50px;
+  background-color: thistle;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: none;
+  font-size: 1.8rem;
+  color: white;
+  position: relative;
+}
+
+.control-drawer svg {
+  transition: transform 0.5s ease;
+  transform: translateY(-1px) scale(0.1);
+}
+
+.control-drawer .circle {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform .4s ease;
+}
+
+.control-drawer .circle:nth-child(1) {
+  transform: translateX(-10px);
+}
+.control-drawer .circle:nth-child(3) {
+  transform: translateX(10px);
+}
+
+.control-drawer.open svg {
+  transform: translateY(-1px) scale(1);
+}
+.control-drawer.open .circle:nth-child(1) {
+  transform: translateX(0px);
+}
+.control-drawer.open .circle:nth-child(3) {
+  transform: translateX(0px);
+}
+
+.controls > button {
+  opacity: 0;
+  margin: 0.3rem 0;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #a348ab;
+  color: #a348ab;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 5px;
+  animation: reveal-button 0.6s ease forwards;
+}
+
+.controls > button:nth-child(2) {
+  transform: translateY(-50%);
+}
+
+.controls > button:nth-child(3) {
+  transform: translateY(-100%);
+}
+
+.controls > button:nth-child(4) {
+  transform: translateY(-150%);
+}
+
+.controls > button:nth-child(5) {
+  transform: translateY(-200%);
+}
+
+.controls > button:hover {
+  background-color: #6300ee1e;
+}
+
+@keyframes reveal-button {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
